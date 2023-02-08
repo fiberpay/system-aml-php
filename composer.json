@@ -1,0 +1,24 @@
+{
+  "name": "fiberpay/system-aml-client",
+  "description": "Client for SystemAML REST API",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jędrzej Jarocki",
+      "email": "jedrzej.jarocki@inpay.pl"
+    }
+  ],
+  "type": "lib",
+  "require": {
+    "php": ">=7.4",
+    "firebase/php-jwt": "^6.3",
+    "ext-curl": "*",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "FiberPay\\SystemAML\\": "src/"
+    }
+  },
+  "minimum-stability": "dev"
+}
