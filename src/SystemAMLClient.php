@@ -5,6 +5,7 @@ namespace FiberPay\SystemAML;
 use Firebase\JWT\JWT;
 
 /** @noinspection PhpUnused */
+
 class SystemAMLClient
 {
 	private string $baseApiURL;
@@ -18,6 +19,7 @@ class SystemAMLClient
 		$this->apiKey = $apiKey;
 		$this->apiSecret = $apiSecret;
 	}
+
 	/**
 	 * @throws SystemAMLException
 	 * @noinspection PhpUnused
@@ -33,15 +35,100 @@ class SystemAMLClient
 	}
 
 	/**
+	 * @return array
+	 * @throws SystemAMLException
+	 */
+	public function createIndividualParty(
+		bool   $isDraft,
+		string $refID = null,
+		string $firstName = null,
+		string $lastName = null,
+		string $personalIdentityNumber = null,
+		string $documentType = null,
+		string $documentNumber = null,
+		string $documentExpirationDate = null,
+		bool   $withoutExpirationDate = null,
+		string $citizenship = null,
+		string $birthCity = null,
+		string $birthCountry = null,
+		bool   $politicallyExposed = null,
+		string $birthDate = null,
+		string $createdByName = null,
+		string $accommodationAddressCountry = null,
+		string $accommodationAddressCity = null,
+		string $accommodationAddressStreet = null,
+		string $accommodationAddressHouseNumber = null,
+		string $accommodationAddressFlatNumber = null,
+		string $accommodationAddressPostalCode = null,
+		string $forwardAddressCountry = null,
+		string $forwardAddressCity = null,
+		string $forwardAddressStreet = null,
+		string $forwardAddressHouseNumber = null,
+		string $forwardAddressFlatNumber = null,
+		string $forwardAddressPostalCode = null,
+	): array
+	{
+		$data = [
+			'type' => 'individual',
+			'firstName' => $firstName,
+			'lastName' => $lastName,
+			'personalIdentityNumber' => $personalIdentityNumber,
+			'documentType' => $documentType,
+			'documentNumber' => $documentNumber,
+			'documentExpirationDate' => $documentExpirationDate,
+			'citizenship' => $citizenship,
+			'birthCity' => $birthCity,
+			'birthCountry' => $birthCountry,
+			'politicallyExposed' => $politicallyExposed,
+			'withoutExpirationDate' => $withoutExpirationDate,
+			'birthDate' => $birthDate,
+			'references' => $refID,
+			'createdByName' => $createdByName,
+		];
+
+		if ($isDraft) {
+			$data['status'] = 'draft';
+		}
+
+		$accommodationAddress = [
+			'country' => $accommodationAddressCountry,
+			'city' => $accommodationAddressCity,
+			'street' => $accommodationAddressStreet,
+			'houseNumber' => $accommodationAddressHouseNumber,
+			'flatNumber' => $accommodationAddressFlatNumber,
+			'postalCode' => $accommodationAddressPostalCode,
+		];
+
+		$hasAccommodationAddress = !empty(array_filter(array_values($accommodationAddress)));
+		if ($hasAccommodationAddress) {
+			$data['accommodationAddress'] = $accommodationAddress;
+		}
+
+		$forwardAddress = [
+			'country' => $forwardAddressCountry,
+			'city' => $forwardAddressCity,
+			'street' => $forwardAddressStreet,
+			'houseNumber' => $forwardAddressHouseNumber,
+			'flatNumber' => $forwardAddressFlatNumber,
+			'postalCode' => $forwardAddressPostalCode,
+		];
+
+		$hasForwardAddress = !empty(array_filter(array_values($forwardAddress)));
+		if ($hasForwardAddress) {
+			$data['forwardAddress'] = $forwardAddress;
+		}
+
+		return $this->createParty($data);
+	}
+
+	/**
 	 * @throws SystemAMLException
 	 * @noinspection PhpUnused
 	 */
-	public function createParty(): array
+	private function createParty($data): array
 	{
-		throw new \Exception('Not implemented');
 		$uri = '/parties';
 		$method = 'post';
-		$data = [];
 
 		return $this->call($method, $uri, $data);
 	}
