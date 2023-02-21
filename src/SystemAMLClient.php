@@ -162,12 +162,58 @@ class SystemAMLClient
 	}
 
 	/**
+	 * @return array
 	 * @throws SystemAMLException
 	 * @noinspection PhpUnused
 	 */
-	public function createTransaction(): array
+	public function createTransaction(
+		bool            $isDraft,
+		bool            $isOccasional,
+		TransactionType $type,
+		string          $amount,
+		Currency        $currency,
+		                $bookedAt,
+		                $location = null,
+		                $description = null,
+		                $references = null,
+		PaymentMethod   $paymentMethod = null,
+		                $senderIban = null,
+		                $senderCode = null,
+		                $senderFirstName = null,
+		                $senderLastName = null,
+		                $senderCompanyName = null,
+		                $receiverIban = null,
+		                $receiverCode = null,
+		                $receiverFirstName = null,
+		                $receiverLastName = null,
+		                $receiverCompanyName = null,
+		                $createdByName = null,
+	): array
 	{
-		throw new \Exception("Not implemented");
+		$data = [
+			'occasional_transaction' => $isOccasional,
+			'type' => $type,
+			'status' => $isDraft ? TransactionStatus::DRAFT : TransactionStatus::NEW,
+			'amount' => $amount,
+			'currency' => $currency,
+			'bookedAt' => $bookedAt,
+			'location' => $location,
+			'description' => $description,
+			'references' => $references,
+			'paymentMethod' => $paymentMethod,
+			'senderFirstName' => $senderFirstName,
+			'senderLastName' => $senderLastName,
+			'senderCompanyName' => $senderCompanyName,
+			'senderCode' => $senderCode,
+			'senderIban' => $senderIban,
+			'receiverFirstName' => $receiverFirstName,
+			'receiverLastName' => $receiverLastName,
+			'receiverCompanyName' => $receiverCompanyName,
+			'receiverCode' => $receiverCode,
+			'receiverIban' => $receiverIban,
+			'createdByName' => $createdByName,
+		];
+
 		$uri = '/transactions';
 		$method = 'post';
 		$data = [];
@@ -213,6 +259,10 @@ class SystemAMLClient
 		if ($httpCode >= 500 || $response === false) {
 			$errorMsg = curl_error($curl);
 			throw new SystemAMLException($errorMsg, $httpCode);
+		}
+
+		if ($httpCode >= 400) {
+			throw new SystemAMLException($response, $httpCode);
 		}
 
 		return json_decode($response, true);
