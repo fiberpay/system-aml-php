@@ -3,6 +3,8 @@
 namespace FiberPay\SystemAML;
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+use Illuminate\Support\Facades\Log;
 
 /** @noinspection PhpUnused */
 
@@ -216,7 +218,6 @@ class SystemAMLClient
 
 		$uri = '/transactions';
 		$method = 'post';
-		$data = [];
 
 		return $this->call($method, $uri, $data);
 	}
