@@ -178,7 +178,7 @@ class SystemAMLClient
 		                $location = null,
 		                $description = null,
 		                $references = null,
-		PaymentMethod   $paymentMethod = null,
+		                $paymentMethod = null,
 		                $senderIban = null,
 		                $senderCode = null,
 		                $senderFirstName = null,
@@ -286,5 +286,11 @@ class SystemAMLClient
 	private function createJWT($payload)
 	{
 		return JWT::encode($payload, $this->apiSecret, 'HS256');
+	}
+
+	/** @noinspection PhpUnused */
+	public function decodeJWT(string $jwt): object
+	{
+		return JWT::decode($jwt, new Key($this->apiSecret, 'HS256'));
 	}
 }
