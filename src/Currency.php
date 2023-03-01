@@ -2,15 +2,15 @@
 
 namespace FiberPay\SystemAML;
 
-enum Currency
+enum Currency: string
 {
-	case PLN;
-	case EUR;
-	case USD;
-	case JPY;
-	case GBP;
-	case AUD;
-	case CAD;
-	case CHF;
-	case CNY;
+	case PLN = 'PLN';
+	case EUR = 'EUR';
+	case USD = 'USD';
+	case JPY = 'JPY';
+	case GBP = 'GBP';
+	case AUD = 'AUD';
+	case CAD = 'CAD';
+	case CHF = 'CHF';
+	case CNY = 'CNY';
 }
