@@ -193,11 +193,11 @@ class SystemAMLClient
 	): array
 	{
 		$data = [
-			'occasional_transaction' => $isOccasional,
-			'type' => $type,
+			'occasionalTransaction' => $isOccasional,
+			'type' => $type->value,
 			'status' => $isDraft ? TransactionStatus::DRAFT : TransactionStatus::NEW,
 			'amount' => $amount,
-			'currency' => $currency,
+			'currency' => $currency->value,
 			'bookedAt' => $bookedAt,
 			'location' => $location,
 			'description' => $description,
