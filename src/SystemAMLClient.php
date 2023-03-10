@@ -125,6 +125,98 @@ class SystemAMLClient
 
 	/**
 	 * @throws SystemAMLException
+	 */
+	public function createSoleProprietorshipParty(
+		bool   $isDraft,
+		string $refID = null,
+		string $taxIdNumber = null,
+		string $nationalBusinessRegistryNumber = null,
+		string $companyName = null,
+		string $firstName = null,
+		string $lastName = null,
+		string $personalIdentityNumber = null,
+		string $documentType = null,
+		string $documentNumber = null,
+		string $documentExpirationDate = null,
+		bool   $withoutExpirationDate = null,
+		string $citizenship = null,
+		string $birthCity = null,
+		string $birthCountry = null,
+		bool   $politicallyExposed = null,
+		string $birthDate = null,
+		string $createdByName = null,
+		string $accommodationAddressCountry = null,
+		string $accommodationAddressCity = null,
+		string $accommodationAddressStreet = null,
+		string $accommodationAddressHouseNumber = null,
+		string $accommodationAddressFlatNumber = null,
+		string $accommodationAddressPostalCode = null,
+		string $forwardAddressCountry = null,
+		string $forwardAddressCity = null,
+		string $forwardAddressStreet = null,
+		string $forwardAddressHouseNumber = null,
+		string $forwardAddressFlatNumber = null,
+		string $forwardAddressPostalCode = null,
+	): array
+	{
+		$data = [
+			'type' => 'sole_proprietorship',
+			'nationalBusinessRegistryNumber' => $nationalBusinessRegistryNumber,
+			'taxIdNumber' => $taxIdNumber,
+			'companyName' => $companyName,
+			'firstName' => $firstName,
+			'lastName' => $lastName,
+			'personalIdentityNumber' => $personalIdentityNumber,
+			'documentType' => $documentType,
+			'documentNumber' => $documentNumber,
+			'documentExpirationDate' => $documentExpirationDate,
+			'citizenship' => $citizenship,
+			'birthCity' => $birthCity,
+			'birthCountry' => $birthCountry,
+			'politicallyExposed' => $politicallyExposed,
+			'withoutExpirationDate' => $withoutExpirationDate,
+			'birthDate' => $birthDate,
+			'references' => $refID,
+			'createdByName' => $createdByName,
+		];
+
+		if ($isDraft) {
+			$data['status'] = 'draft';
+		}
+
+		$accommodationAddress = [
+			'country' => $accommodationAddressCountry,
+			'city' => $accommodationAddressCity,
+			'street' => $accommodationAddressStreet,
+			'houseNumber' => $accommodationAddressHouseNumber,
+			'flatNumber' => $accommodationAddressFlatNumber,
+			'postalCode' => $accommodationAddressPostalCode,
+		];
+
+		$hasAccommodationAddress = !empty(array_filter(array_values($accommodationAddress)));
+		if ($hasAccommodationAddress) {
+			$data['accommodationAddress'] = $accommodationAddress;
+		}
+
+		$forwardAddress = [
+			'country' => $forwardAddressCountry,
+			'city' => $forwardAddressCity,
+			'street' => $forwardAddressStreet,
+			'houseNumber' => $forwardAddressHouseNumber,
+			'flatNumber' => $forwardAddressFlatNumber,
+			'postalCode' => $forwardAddressPostalCode,
+		];
+
+		$hasForwardAddress = !empty(array_filter(array_values($forwardAddress)));
+		if ($hasForwardAddress) {
+			$data['forwardAddress'] = $forwardAddress;
+		}
+
+		return $this->createParty($data);
+	}
+
+	/**
+	 * @throws SystemAMLException
 	 * @noinspection PhpUnused
 	 */
 	private function createParty($data): array
