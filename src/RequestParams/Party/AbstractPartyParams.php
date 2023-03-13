@@ -5,7 +5,7 @@ namespace FiberPay\SystemAML\RequestParams\Party;
 use FiberPay\SystemAML\PartyStatus;
 use FiberPay\SystemAML\RequestParams\RequestParams;
 
-abstract class AbstractPartyParams extends RequestParams implements PartyParams
+abstract class AbstractPartyParams extends RequestParams
 {
 	private string $type;
 	private readonly PartyStatus $status;

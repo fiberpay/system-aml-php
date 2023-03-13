@@ -10,12 +10,12 @@ class IndividualPartyParams extends AbstractPartyParams
 	protected string $type = 'individual';
 	private ?string $personalIdentityNumber;
 	private bool $withoutExpirationDate;
-	private ?string $citizenship;
-	private ?string $birthCity;
-	private ?string $birthCountry;
-	private ?string $birthDate;
-	private ?AddressParams $accommodationAddress;
-	private ?AddressParams $forwardAddress;
+	private ?string $citizenship = null;
+	private ?string $birthCity = null;
+	private ?string $birthCountry = null;
+	private ?string $birthDate = null;
+	private ?AddressParams $accommodationAddress = null;
+	private ?AddressParams $forwardAddress = null;
 
 	public function __construct(
 		PartyStatus                         $status,

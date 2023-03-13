@@ -2,10 +2,12 @@
 
 namespace FiberPay\SystemAML\RequestParams;
 
-abstract class RequestParams
+use FiberPay\SystemAML\RequestParams\Party\PartyParams;
+
+abstract class RequestParams implements PartyParams
 {
-	private ?string $references;
-	private ?string $createdByName;
+	private ?string $references = null;
+	private ?string $createdByName = null;
 
 	public function references(?string $references): self
 	{
@@ -19,7 +21,7 @@ abstract class RequestParams
 		return $this;
 	}
 
-	protected function toArray(): array {
+	public function toArray(): array {
 		return [
 			'references' => $this->references,
 			'createdByName' => $this->createdByName,

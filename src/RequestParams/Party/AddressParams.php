@@ -4,12 +4,12 @@ namespace FiberPay\SystemAML\RequestParams\Party;
 
 class AddressParams
 {
-	private ?string $country;
-	private ?string $city;
-	private ?string $street;
-	private ?string $houseNumber;
-	private ?string $flatNumber;
-	private ?string $postalCode;
+	private ?string $country = null;
+	private ?string $city = null;
+	private ?string $street = null;
+	private ?string $houseNumber = null;
+	private ?string $flatNumber = null;
+	private ?string $postalCode = null;
 
 	public function country(?string $country): self
 	{
@@ -58,6 +58,7 @@ class AddressParams
 
 		if ($hasAttributes) {
 			return [
+				'country' => $this->country,
 				'city' => $this->city,
 				'street' => $this->street,
 				'houseNumber' => $this->houseNumber,

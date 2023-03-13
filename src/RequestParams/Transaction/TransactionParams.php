@@ -10,19 +10,19 @@ use FiberPay\SystemAML\TransactionType;
 
 class TransactionParams extends RequestParams
 {
-	private readonly ?string $location;
-	private readonly ?string $description;
-	private readonly bool $isOccasional;
-	private readonly ?string $senderIban;
-	private readonly ?string $senderCode;
-	private readonly ?string $senderFirstName;
-	private readonly ?string $senderLastName;
-	private readonly ?string $senderCompanyName;
-	private readonly ?string $receiverIban;
-	private readonly ?string $receiverCode;
-	private readonly ?string $receiverFirstName;
-	private readonly ?string $receiverLastName;
-	private readonly ?string $receiverCompanyName;
+	private ?string $location = null;
+	private ?string $description = null;
+	private bool $isOccasional = false;
+	private ?string $senderIban = null;
+	private ?string $senderCode = null;
+	private ?string $senderFirstName = null;
+	private ?string $senderLastName = null;
+	private ?string $senderCompanyName = null;
+	private ?string $receiverIban = null;
+	private ?string $receiverCode = null;
+	private ?string $receiverFirstName = null;
+	private ?string $receiverLastName = null;
+	private ?string $receiverCompanyName = null;
 
 	public function __construct(
 		private readonly TransactionStatus $status,
