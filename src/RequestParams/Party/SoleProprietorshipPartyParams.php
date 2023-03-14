@@ -2,41 +2,40 @@
 
 namespace FiberPay\SystemAML\RequestParams\Party;
 
-class SoleProprietorshipPartyParams extends IndividualPartyParams
+use FiberPay\SystemAML\PartyType;
+
+class SoleProprietorshipPartyParams extends AbstractPartyParams
 {
-	private readonly string $taxIdNumber;
-	private readonly string $nationalBusinessRegistryNumber;
-	private readonly string $companyName;
+	protected PartyType $type = PartyType::SOLE_PROPRIETORSHIP;
+	private IndividualPartyParams $individualParams;
+	private CompanyParams $companyParams;
+	private ?AddressParams $businessAddress = null;
 
-	public function taxIdNumber(string $taxIdNumber): self
+	public function __construct(IndividualPartyParams $individualParams, CompanyParams $companyParams)
 	{
-		$this->taxIdNumber = $taxIdNumber;
-		return $this;
+		$this->individualParams = $individualParams;
+		$this->companyParams = $companyParams;
+		$this->status = $individualParams->status;
 	}
 
-	public function nationalBusinessRegistryNumber(string $nationalBusinessRegistryNumber): self
+	public function businessAddress(AddressParams $businessAddress): self
 	{
-		$this->nationalBusinessRegistryNumber = $nationalBusinessRegistryNumber;
-		return $this;
-	}
-
-	public function companyName(string $companyName): self
-	{
-		$this->companyName = $companyName;
+		$this->businessAddress = $businessAddress;
 		return $this;
 	}
 
 	public function toArray(): array
 	{
-		$data = [
-			'taxIdNumber' => $this->taxIdNumber,
-			'nationalBusinessRegistryNumber' => $this->nationalBusinessRegistryNumber,
-			'companyName' => $this->companyName,
-		];
-
-		return array_merge(
+		$data = array_merge(
+			$this->individualParams->toArray(),
+			$this->companyParams->toArray(),
 			parent::toArray(),
-			$data,
 		);
+
+		if (isset($this->businessAddress)) {
+			$data['businessAddress'] = $this->businessAddress->toArray();
+		}
+
+		return $data;
 	}
 }

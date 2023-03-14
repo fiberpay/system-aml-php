@@ -4,10 +4,11 @@ namespace FiberPay\SystemAML\RequestParams\Party;
 
 use DateTimeImmutable;
 use FiberPay\SystemAML\PartyStatus;
+use FiberPay\SystemAML\PartyType;
 
 class IndividualPartyParams extends AbstractPartyParams
 {
-	protected string $type = 'individual';
+	protected PartyType $type = PartyType::INDIVIDUAL;
 	private ?string $personalIdentityNumber;
 	private bool $withoutExpirationDate;
 	private ?string $citizenship = null;
@@ -27,7 +28,7 @@ class IndividualPartyParams extends AbstractPartyParams
 		private readonly bool               $politicallyExposed,
 	)
 	{
-		parent::__construct($this->type, $status);
+		$this->status = $status;
 		$this->withoutExpirationDate = !isset($this->documentExpirationDate);
 	}
 
