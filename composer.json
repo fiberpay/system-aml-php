@@ -10,7 +10,7 @@
   ],
   "type": "lib",
   "require": {
-    "php": ">=7.4",
+    "php": ">=8.1",
     "firebase/php-jwt": "^6.3",
     "ext-curl": "*",
     "ext-json": "*",
