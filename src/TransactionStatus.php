@@ -4,5 +4,8 @@ namespace FiberPay\SystemAML;
 
 enum TransactionStatus: string
 {
-	case NEW = 'new';
+    case DRAFT = 'draft';
+    case IN_ACCEPTANCE = 'in_acceptance';
+    case SETTLED = 'settled';
+    case CANCELLED = 'cancelled';
 }
