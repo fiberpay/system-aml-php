@@ -6,6 +6,6 @@ enum TransactionStatus: string
 {
     case DRAFT = 'draft';
     case IN_ACCEPTANCE = 'in_acceptance';
-    case SETTLED = 'settled';
+    case ACCEPTED = 'accepted';
     case CANCELLED = 'cancelled';
 }
