@@ -79,7 +79,6 @@ class IndividualPartyParams extends AbstractPartyParams
 		$data = [
 			'firstName' => $this->firstName,
 			'lastName' => $this->lastName,
-			'personalIdentityNumber' => $this->personalIdentityNumber,
 			'documentType' => $this->documentType,
 			'documentNumber' => $this->documentNumber,
 			'documentExpirationDate' => $this->documentExpirationDate?->format('Y-m-d'),
@@ -93,6 +92,7 @@ class IndividualPartyParams extends AbstractPartyParams
 
 		if ($this->accommodationAddress) $data['accommodationAddress'] = $this->accommodationAddress->toArray();
 		if ($this->forwardAddress) $data['forwardAddress'] = $this->forwardAddress->toArray();
+		if ($this->personalIdentityNumber) $data['personalIdentityNumber'] = $this->personalIdentityNumber;
 
 		return array_merge(
 			parent::toArray(),
