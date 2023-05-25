@@ -9,7 +9,7 @@ use FiberPay\SystemAML\PartyType;
 class IndividualPartyParams extends AbstractPartyParams
 {
 	protected PartyType $type = PartyType::INDIVIDUAL;
-	private ?string $personalIdentityNumber;
+	private ?string $personalIdentityNumber = null;
 	private bool $withoutExpirationDate;
 	private ?string $citizenship = null;
 	private ?string $birthCity = null;
