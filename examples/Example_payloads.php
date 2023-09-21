@@ -84,8 +84,8 @@ $ret = $client->createSoleProprietorshipParty(
     personalIdentityNumber: "99120234518",
     pkdCodes: [
         [
-        "pkdCode" => "01.15.Z",
-        "pkdName" => "Uprawa tytoniu"
+            "pkdCode" => "01.15.Z",
+            "pkdName" => "Uprawa tytoniu"
         ]
     ],
     tradeNames: ["super firma", "moja firma","fajna firma"],

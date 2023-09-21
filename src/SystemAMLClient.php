@@ -246,6 +246,86 @@ class SystemAMLClient
 		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
 	}
 
+	public function createCompanyParty($status, $taxIdNumber, $companyName, $businessActivityForm = null, $mainPkdCode = null,
+									  $mainPkdName = null, $registrationCountry = null, $pkdCodes = [], $companyIdentifier = null,
+									  $nationalBusinessRegistryNumber = null, $nationalCourtRegistryNumber = null, $tradeNames = null,
+									  $website = null, $servicesDescription = null, $beneficiaries = [], $boardMembers = [],
+									  $references = null, $createdByName = null, $businessCountry = null, $businessCity = null,
+									  $businessStreet = null, $businessHouseNumber = null, $businessFlatNumber = null,
+									  $businessPostalCode = null, $companyEmailAdress = null, $companyPhoneCountry = null,
+									  $companyPhoneNumber = null ): array {
+		$partyParams = [
+			"type" => PartyType::COMPANY,
+			"status" => $status,
+			"taxIdNumber" => $taxIdNumber,
+			"companyName" => $companyName,
+		];
+		if ($mainPkdCode || $mainPkdName) {
+			$partyParams["mainPkdCode"] = [
+				"pkdCode" => $mainPkdCode,
+				"pkdName" => $mainPkdName,
+			];
+		}
+		if ($pkdCodes) {
+			$partyParams["pkdCodes"] = $pkdCodes;
+		}
+		if ($tradeNames) {
+			$partyParams["tradeNames"] = $tradeNames;
+		}
+		if ($companyIdentifier) {
+			$partyParams["companyIdentifier"] = $companyIdentifier;
+		}
+		if ($nationalBusinessRegistryNumber) {
+			$partyParams["nationalBusinessRegistryNumber"] = $nationalBusinessRegistryNumber;
+		}
+		if ($businessActivityForm) {
+			$partyParams["businessActivityForm"] = $businessActivityForm;
+		}
+		if ($nationalCourtRegistryNumber) {
+			$partyParams["nationalCourtRegistryNumber"] = $nationalCourtRegistryNumber;
+		}
+		if ($website) {
+			$partyParams["website"] = $website;
+		}
+		if ($beneficiaries) {
+			$partyParams["beneficiaries"] = $beneficiaries;
+		}
+		if ($boardMembers) {
+			$partyParams["boardMembers"] = $boardMembers;
+		}
+		if ($servicesDescription) {
+			$partyParams["servicesDescription"] = $servicesDescription;
+		}
+		if ($registrationCountry) {
+			$partyParams["registrationCountry"] = $registrationCountry;
+		}
+		if ($references) {
+			$partyParams["references"] = $references;
+		}
+		if ($businessCountry || $businessCity || $businessStreet ||
+			$businessHouseNumber || $businessFlatNumber || $businessPostalCode) {
+			$partyParams["businessAddress"] = [
+				"country" => $businessCountry,
+				"city" => $businessCity,
+				"street" => $businessStreet,
+				"houseNumber" => $businessHouseNumber,
+				"flatNumber" => $businessFlatNumber,
+				"postalCode" => $businessPostalCode,
+			];
+		}
+		if ($companyEmailAdress || $companyPhoneCountry || $companyPhoneNumber) {
+			$partyParams["companyContact"] = [
+				"emailAdress" => $companyEmailAdress,
+				"phoneCountry" => $companyPhoneCountry,
+				"phoneNumber" => $companyPhoneNumber,
+			];
+		}
+		if ($createdByName) {
+			$partyParams["createdByName"] = $createdByName;
+		}
+		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
+	}
+
 	public function updatePartyStatus(string $partyCode, $newStatus): array
 	{
 		$partyParams = [
