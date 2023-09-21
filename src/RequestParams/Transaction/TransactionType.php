@@ -1,6 +1,6 @@
 <?php
 
-namespace FiberPay\SystemAML;
+namespace FiberPay\SystemAML\RequestParams\Transaction;
 
 enum TransactionType: string
 {

@@ -3,7 +3,7 @@
 namespace FiberPay\SystemAML;
 
 use FiberPay\SystemAML\RequestParams\Party\PartyParams;
-use FiberPay\SystemAML\RequestParams\Transaction\TransactionParams;
+use FiberPay\SystemAML\RequestParams\Constants\HttpMethod;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -35,18 +35,9 @@ class SystemAMLClient
 	/**
 	 * @throws SystemAMLException
 	 */
-	public function createParty(PartyParams $request): array
+	public function createParty($request): array
 	{
 		return $this->call(HttpMethod::POST, self::PARTIES_URI, $request->toArray());
-	}
-
-	/**
-	 * @throws SystemAMLException
-	 */
-	public function updateParty(string $partyCode, PartyParams $request): array
-	{
-		$uri = self::PARTIES_URI . '/' . $partyCode;
-		return $this->call(HttpMethod::PUT, $uri, $request->toArray());
 	}
 
 	/**
@@ -61,9 +52,32 @@ class SystemAMLClient
 	/**
 	 * @throws SystemAMLException
 	 */
-	public function createTransaction(TransactionParams $transactionParams): array
-	{
-		return $this->call(HttpMethod::POST, self::TRANSACTIONS_URI, $transactionParams->toArray());
+	public function createTransaction($status, $type, $occasionalTransaction, $amount, $currency,
+									 $bookedAt, $paymentMethod, $title, $location, $entities = [],
+									 $description = null, $references = null, $createdByName = null): array {
+		$transactionParams = [
+			"status" => $status,
+			"type" => $type,
+			"occasionalTransaction" => $occasionalTransaction,
+			"amount" => $amount,
+			"currency" => $currency,
+			"bookedAt" => $bookedAt,
+			"paymentMethod" => $paymentMethod,
+			"title" => $title,
+			"location" => $location,
+			"entities" => $entities
+		];
+		if ($references) {
+			$transactionParams["references"] = $references;
+		}
+		if ($description) {
+			$transactionParams["description"] = $description;
+		}
+		if ($createdByName) {
+			$transactionParams["createdByName"] = $createdByName;
+		}
+		var_dump($transactionParams);
+		return $this->call(HttpMethod::POST, self::TRANSACTIONS_URI, $transactionParams);
 	}
 
 	/**
