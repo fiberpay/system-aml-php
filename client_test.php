@@ -21,7 +21,7 @@ $apiSecret = "437c2ea68b47e774c475ad43b82e36f6c414ae86200469dbf2f37470dde6ac9d";
 $client = new SystemAMLClient($apiURL, $apiKey, $apiSecret);
 
 try {
-    $ret = $client->deleteTransaction("6vypwdxmjcgr");
+    $ret = $client->updateTransactionStatus("td4r9v6weunk", TransactionStatus::CANCELLED);
     var_dump($ret);
 } catch (Exception $e) {
     $code = $e->getHttpStatusCode();

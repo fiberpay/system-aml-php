@@ -81,6 +81,14 @@ class SystemAMLClient
 		return $this->call(HttpMethod::POST, self::TRANSACTIONS_URI, $transactionParams);
 	}
 
+	public function updateTransactionStatus(string $transactionCode, $newStatus): array
+	{
+		$transactionParams = [
+			"newStatus" => $newStatus
+		];
+		$uri = self::TRANSACTIONS_URI . '/' . $transactionCode. '/status';
+		return $this->call(HttpMethod::POST, $uri, $transactionParams);
+	}
 	public function getTransaction(string $transactionCode): array
 	{
 		$uri = self::TRANSACTIONS_URI . '/' . $transactionCode;

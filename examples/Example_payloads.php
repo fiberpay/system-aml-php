@@ -26,6 +26,6 @@ $ret = $client->createTransaction(
 <!-- GET TRANSACTION -->
 $ret = $client->getTransaction("q9hyv32w4b68");
 <!-- CHANGE TRANSACTION STATUS -->
-
+$ret = $client->updateTransactionStatus("td4r9v6weunk", TransactionStatus::CANCELLED);
 <!-- DELETE TRANSACTION -->
 $ret = $client->deleteTransaction("q9hyv32w4b68");
