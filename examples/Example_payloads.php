@@ -1,7 +1,5 @@
 <!-- CREATE TRANSACTION -->
-
-try {
-    $ret = $client->createTransaction(
+$ret = $client->createTransaction(
             status: TransactionStatus::ACCEPTED,
             type: TransactionType::VENDER,
             occasionalTransaction: false,
@@ -15,7 +13,7 @@ try {
             createdByName: "OPTIMUS PRIME",
             entities: [
                 [
-                    "type" => "buyer",
+                    "type" => EntityType::BUYER,
                     "description" => "entity z klienta",
                     "firstName" => "Jan",
                     "lastName" => "Kowalski",
@@ -25,9 +23,3 @@ try {
                 ]
             ]
     );
-    var_dump($ret);
-} catch (Exception $e) {
-    $code = $e->getHttpsStatusCode();
-    $message = $e->getMessage();
-    var_dump("[$code] $message");
-}
