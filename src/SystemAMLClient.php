@@ -65,8 +65,10 @@ class SystemAMLClient
 			"paymentMethod" => $paymentMethod,
 			"title" => $title,
 			"location" => $location,
-			"entities" => $entities
 		];
+		if ($entities) {
+			$transactionParams["entities"] = $entities;
+		}
 		if ($references) {
 			$transactionParams["references"] = $references;
 		}
@@ -76,8 +78,19 @@ class SystemAMLClient
 		if ($createdByName) {
 			$transactionParams["createdByName"] = $createdByName;
 		}
-		var_dump($transactionParams);
 		return $this->call(HttpMethod::POST, self::TRANSACTIONS_URI, $transactionParams);
+	}
+
+	public function getTransaction(string $transactionCode): array
+	{
+		$uri = self::TRANSACTIONS_URI . '/' . $transactionCode;
+		return $this->call(HttpMethod::GET, $uri);
+	}
+
+	public function deleteTransaction(string $transactionCode): array
+	{
+		$uri = self::TRANSACTIONS_URI . '/' . $transactionCode;
+		return $this->call(HttpMethod::DELETE, $uri);
 	}
 
 	/**
@@ -134,7 +147,7 @@ class SystemAMLClient
 			"Api-Key: $this->apiKey",
 		];
 
-		if ($httpMethod === HttpMethod::GET) {
+		if ($httpMethod === HttpMethod::GET || $httpMethod === HttpMethod::DELETE) {
 			$token = $this->createJWT([]);
 			$headers[] = "Authorization: Bearer $token";
 		}

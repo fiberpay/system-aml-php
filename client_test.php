@@ -21,33 +21,10 @@ $apiSecret = "437c2ea68b47e774c475ad43b82e36f6c414ae86200469dbf2f37470dde6ac9d";
 $client = new SystemAMLClient($apiURL, $apiKey, $apiSecret);
 
 try {
-    $ret = $client->createTransaction(
-            status: TransactionStatus::ACCEPTED,
-            type: TransactionType::VENDER,
-            occasionalTransaction: false,
-            amount: '780',
-            currency: Currency::PLN,
-            bookedAt: '2023-09-10 10:10:10',
-            paymentMethod: 'blik',
-            title: 'transakcja z klienta',
-            location: 'PL',
-            references: "",
-            createdByName: "OPTIMUS PRIME",
-            entities: [
-                [
-                    "type" => EntityType::BUYER,
-                    "description" => "entity z klienta",
-                    "firstName" => "Jan",
-                    "lastName" => "Kowalski",
-                    "companyName" => "",
-                    "partyCode" => "",
-                    "iban" => ""
-                ]
-            ]
-    );
+    $ret = $client->deleteTransaction("6vypwdxmjcgr");
     var_dump($ret);
 } catch (Exception $e) {
-    $code = $e->getHttpsStatusCode();
+    $code = $e->getHttpStatusCode();
     $message = $e->getMessage();
     var_dump("[$code] $message");
 }
