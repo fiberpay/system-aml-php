@@ -4,6 +4,7 @@ namespace FiberPay\SystemAML;
 
 use FiberPay\SystemAML\RequestParams\Party\PartyParams;
 use FiberPay\SystemAML\RequestParams\Constants\HttpMethod;
+use FiberPay\SystemAML\RequestParams\Party\PartyType;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -24,10 +25,108 @@ class SystemAMLClient
 
 	/**
 	 * @throws SystemAMLException
+	 */
+	public function createIndividualParty($status, $firstName, $lastName, $politicallyExposed,
+										 $politicallyExposedFamily, $politicallyExposedCoworker,
+	 									 $personalIdentityNumber = null, $birthDate = null,
+										 $birthCountry = null, $references = null, $citizenship = null,
+										 $birthCity = null, $documentType = null, $documentNumber = null,
+										 $documentExpirationDate = null, $createdByName = null, $withoutExpirationDate = null,
+										 $accommodationCountry = null, $accommodationCity = null, $accommodationStreet = null,
+										 $accommodationHouseNumber = null, $accommodationFlatNumber = null,
+										 $accommodationPostalCode = null, $forwardCountry = null, $forwardCity = null,
+										 $forwardStreet = null, $forwardHouseNumber = null, $forwardFlatNumber = null,
+										 $forwardPostalCode = null, $personalEmailAdress = null,
+										 $personalPhoneCountry = null, $personalPhoneNumber = null
+										 ): array {
+		$partyParams = [
+			"type" => PartyType::INDIVIDUAL,
+			"status" => $status,
+			"firstName" => $firstName,
+			"lastName" => $lastName,
+			"politicallyExposed" => $politicallyExposed,
+			"politicallyExposedFamily" => $politicallyExposedFamily,
+			"politicallyExposedCoworker" => $politicallyExposedCoworker,
+		];
+		if ($personalIdentityNumber) {
+			$partyParams["personalIdentityNumber"] = $personalIdentityNumber;
+		}
+		if ($birthDate) {
+			$partyParams["birthDate"] = $birthDate;
+		}
+		if ($birthCountry) {
+			$partyParams["birthCountry"] = $birthCountry;
+		}
+		if ($citizenship) {
+			$partyParams["citizenship"] = $citizenship;
+		}
+		if ($references) {
+			$partyParams["references"] = $references;
+		}
+		if ($birthCity) {
+			$partyParams["birthCity"] = $birthCity;
+		}
+		if ($documentType) {
+			$partyParams["documentType"] = $documentType;
+		}
+		if ($documentNumber) {
+			$partyParams["documentNumber"] = $documentNumber;
+		}
+		if ($documentExpirationDate) {
+			$partyParams["documentExpirationDate"] = $documentExpirationDate;
+		}
+		if ($withoutExpirationDate) {
+			$partyParams["withoutExpirationDate"] = $withoutExpirationDate;
+		}
+		if ($accommodationCountry || $accommodationCity || $accommodationStreet ||
+			$accommodationHouseNumber || $accommodationFlatNumber || $accommodationPostalCode) {
+			$partyParams["accommodationAddress"] = [
+				"country" => $accommodationCountry,
+				"city" => $accommodationCity,
+				"street" => $accommodationStreet,
+				"houseNumber" => $accommodationHouseNumber,
+				"flatNumber" => $accommodationFlatNumber,
+				"postalCode" => $accommodationPostalCode,
+			];
+		}
+		if ($forwardCountry || $forwardCity || $forwardStreet ||
+			$forwardHouseNumber || $forwardFlatNumber || $forwardPostalCode) {
+			$partyParams["forwardAddress"] = [
+				"country" => $forwardCountry,
+				"city" => $forwardCity,
+				"street" => $forwardStreet,
+				"houseNumber" => $forwardHouseNumber,
+				"flatNumber" => $forwardFlatNumber,
+				"postalCode" => $forwardPostalCode,
+			];
+		}
+		if ($personalEmailAdress || $personalPhoneCountry || $personalPhoneNumber) {
+			$partyParams["personalContact"] = [
+				"emailAdress" => $personalEmailAdress,
+				"phoneCountry" => $personalPhoneCountry,
+				"phoneNumber" => $personalPhoneNumber,
+			];
+		}
+		if ($createdByName) {
+			$partyParams["createdByName"] = $createdByName;
+		}
+		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
+	}
+
+	public function updatePartyStatus(string $partyCode, $newStatus): array
+	{
+		$partyParams = [
+			"newStatus" => $newStatus
+		];
+		$uri = self::PARTIES_URI . '/' . $partyCode . '/status';
+		return $this->call(HttpMethod::POST, $uri, $partyParams);
+	}
+
+	/**
+	 * @throws SystemAMLException
 	 * @noinspection PhpUnused
 	 */
-	public function getParty(string $partyCode): array
-	{
+	public function getParty(string $partyCode): array {
 		$uri = self::PARTIES_URI . '/' . $partyCode;
 		return $this->call(HttpMethod::GET, $uri);
 	}
@@ -35,16 +134,7 @@ class SystemAMLClient
 	/**
 	 * @throws SystemAMLException
 	 */
-	public function createParty($request): array
-	{
-		return $this->call(HttpMethod::POST, self::PARTIES_URI, $request->toArray());
-	}
-
-	/**
-	 * @throws SystemAMLException
-	 */
-	public function deleteParty(string $partyCode): array
-	{
+	public function deleteParty(string $partyCode): array {
 		$uri = self::PARTIES_URI . '/' . $partyCode;
 		return $this->call(HttpMethod::DELETE, $uri);
 	}
@@ -81,22 +171,19 @@ class SystemAMLClient
 		return $this->call(HttpMethod::POST, self::TRANSACTIONS_URI, $transactionParams);
 	}
 
-	public function updateTransactionStatus(string $transactionCode, $newStatus): array
-	{
+	public function updateTransactionStatus(string $transactionCode, $newStatus): array {
 		$transactionParams = [
 			"newStatus" => $newStatus
 		];
-		$uri = self::TRANSACTIONS_URI . '/' . $transactionCode. '/status';
+		$uri = self::TRANSACTIONS_URI . '/' . $transactionCode . '/status';
 		return $this->call(HttpMethod::POST, $uri, $transactionParams);
 	}
-	public function getTransaction(string $transactionCode): array
-	{
+	public function getTransaction(string $transactionCode): array {
 		$uri = self::TRANSACTIONS_URI . '/' . $transactionCode;
 		return $this->call(HttpMethod::GET, $uri);
 	}
 
-	public function deleteTransaction(string $transactionCode): array
-	{
+	public function deleteTransaction(string $transactionCode): array {
 		$uri = self::TRANSACTIONS_URI . '/' . $transactionCode;
 		return $this->call(HttpMethod::DELETE, $uri);
 	}
