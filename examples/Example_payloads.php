@@ -65,6 +65,61 @@ $ret = $client->createIndividualParty(
     personalPhoneCountry: "48",
     personalPhoneNumber: "123123123",
 );
+<!-- CREATE SOLE PROPRIETORSHIP PARTY -->
+$ret = $client->createSoleProprietorshipParty(
+    status: PartyStatus::ACTIVE,
+    birthCity: "Warszawa",
+    nationalBusinessRegistryNumber: "123456789",
+    birthCountry: "PL",
+    citizenship: "PL",
+    companyName: "Usługi programistyczne",
+    createdByName: "Adam",
+    documentExpirationDate: "2025-05-08",
+    documentNumber: "aze123123",
+    documentType: "passport",
+    firstName: "Jan",
+    lastName: "Kowalski",
+    mainPkdCode: "01.12.Z",
+    mainPkdName: "Uprawa ryżu",
+    personalIdentityNumber: "99120234518",
+    pkdCodes: [
+        [
+        "pkdCode" => "01.15.Z",
+        "pkdName" => "Uprawa tytoniu"
+        ]
+    ],
+    tradeNames: ["super firma", "moja firma","fajna firma"],
+    politicallyExposed: "no",
+    politicallyExposedCoworker: "no",
+    politicallyExposedFamily: "yes",
+    references: "qwerty",
+    taxIdNumber: "3765151981",
+    withoutExpirationDate: false,
+    forwardCountry: "PL",
+    forwardCity: "Warszawa",
+    forwardStreet: "Grzybowska",
+    forwardHouseNumber: "4",
+    forwardFlatNumber: "106",
+    forwardPostalCode: "00-131",
+    businessCountry: "PL",
+    businessCity: "Warszawa",
+    businessStreet: "Grzybowska",
+    businessHouseNumber: "4",
+    businessFlatNumber: "106",
+    businessPostalCode: "00-131",
+    accommodationCountry: "PL",
+    accommodationCity: "Warszawa",
+    accommodationStreet: "Grzybowska",
+    accommodationHouseNumber: "4",
+    accommodationFlatNumber: "106",
+    accommodationPostalCode: "00-131",
+    personalEmailAdress: "info@fiberpay.pl",
+    personalPhoneCountry: "48",
+    personalPhoneNumber: "123123123",
+    companyEmailAdress: "info@fiberpay.pl",
+    companyPhoneCountry: "48",
+    companyPhoneNumber: "123123123"
+);
 <!-- GET PARTY -->
 $ret = $client->getParty("8s4a617n3xgf");
 <!-- CHANGE TRANSACTION STATUS -->

@@ -112,6 +112,139 @@ class SystemAMLClient
 		}
 		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
 	}
+	public function createSoleProprietorshipParty($status, $firstName, $lastName, $politicallyExposed,
+										 $politicallyExposedFamily, $politicallyExposedCoworker,
+										 $taxIdNumber, $companyName, $mainPkdCode = null, $mainPkdName = null,
+										 $registrationCountry = null, $pkdCodes = [],
+										 $companyIdentifier = null, $nationalBusinessRegistryNumber = null, $tradeNames = null,
+										 $personalIdentityNumber = null, $birthDate = null,
+										 $birthCountry = null, $references = null, $citizenship = null,
+										 $birthCity = null, $documentType = null, $documentNumber = null,
+										 $documentExpirationDate = null, $createdByName = null, $withoutExpirationDate = null,
+										 $accommodationCountry = null, $accommodationCity = null, $accommodationStreet = null,
+										 $accommodationHouseNumber = null, $accommodationFlatNumber = null,
+										 $accommodationPostalCode = null, $forwardCountry = null, $forwardCity = null,
+										 $forwardStreet = null, $forwardHouseNumber = null, $forwardFlatNumber = null,
+										 $forwardPostalCode = null, $businessCountry = null, $businessCity = null,
+										 $businessStreet = null, $businessHouseNumber = null, $businessFlatNumber = null,
+										 $businessPostalCode = null, $personalEmailAdress = null,
+										 $personalPhoneCountry = null, $personalPhoneNumber = null, $companyEmailAdress = null,
+										 $companyPhoneCountry = null, $companyPhoneNumber = null
+										 ): array {
+		$partyParams = [
+			"type" => PartyType::SOLE_PROPRIETORSHIP,
+			"status" => $status,
+			"firstName" => $firstName,
+			"lastName" => $lastName,
+			"politicallyExposed" => $politicallyExposed,
+			"politicallyExposedFamily" => $politicallyExposedFamily,
+			"politicallyExposedCoworker" => $politicallyExposedCoworker,
+			"taxIdNumber" => $taxIdNumber,
+			"companyName" => $companyName,
+		];
+		if ($mainPkdCode || $mainPkdName) {
+			$partyParams["mainPkdCode"] = [
+				"pkdCode" => $mainPkdCode,
+				"pkdName" => $mainPkdName,
+			];
+		}
+		if ($pkdCodes) {
+			$partyParams["pkdCodes"] = $pkdCodes;
+		}
+		if ($tradeNames) {
+			$partyParams["tradeNames"] = $tradeNames;
+		}
+		if ($companyIdentifier) {
+			$partyParams["companyIdentifier"] = $companyIdentifier;
+		}
+		if ($nationalBusinessRegistryNumber) {
+			$partyParams["nationalBusinessRegistryNumber"] = $nationalBusinessRegistryNumber;
+		}
+		if ($registrationCountry) {
+			$partyParams["registrationCountry"] = $registrationCountry;
+		}
+		if ($personalIdentityNumber) {
+			$partyParams["personalIdentityNumber"] = $personalIdentityNumber;
+		}
+		if ($birthDate) {
+			$partyParams["birthDate"] = $birthDate;
+		}
+		if ($birthCountry) {
+			$partyParams["birthCountry"] = $birthCountry;
+		}
+		if ($citizenship) {
+			$partyParams["citizenship"] = $citizenship;
+		}
+		if ($references) {
+			$partyParams["references"] = $references;
+		}
+		if ($birthCity) {
+			$partyParams["birthCity"] = $birthCity;
+		}
+		if ($documentType) {
+			$partyParams["documentType"] = $documentType;
+		}
+		if ($documentNumber) {
+			$partyParams["documentNumber"] = $documentNumber;
+		}
+		if ($documentExpirationDate) {
+			$partyParams["documentExpirationDate"] = $documentExpirationDate;
+		}
+		if ($withoutExpirationDate) {
+			$partyParams["withoutExpirationDate"] = $withoutExpirationDate;
+		}
+		if ($accommodationCountry || $accommodationCity || $accommodationStreet ||
+			$accommodationHouseNumber || $accommodationFlatNumber || $accommodationPostalCode) {
+			$partyParams["accommodationAddress"] = [
+				"country" => $accommodationCountry,
+				"city" => $accommodationCity,
+				"street" => $accommodationStreet,
+				"houseNumber" => $accommodationHouseNumber,
+				"flatNumber" => $accommodationFlatNumber,
+				"postalCode" => $accommodationPostalCode,
+			];
+		}
+		if ($forwardCountry || $forwardCity || $forwardStreet ||
+			$forwardHouseNumber || $forwardFlatNumber || $forwardPostalCode) {
+			$partyParams["forwardAddress"] = [
+				"country" => $forwardCountry,
+				"city" => $forwardCity,
+				"street" => $forwardStreet,
+				"houseNumber" => $forwardHouseNumber,
+				"flatNumber" => $forwardFlatNumber,
+				"postalCode" => $forwardPostalCode,
+			];
+		}
+		if ($businessCountry || $businessCity || $businessStreet ||
+			$businessHouseNumber || $businessFlatNumber || $businessPostalCode) {
+			$partyParams["businessAddress"] = [
+				"country" => $businessCountry,
+				"city" => $businessCity,
+				"street" => $businessStreet,
+				"houseNumber" => $businessHouseNumber,
+				"flatNumber" => $businessFlatNumber,
+				"postalCode" => $businessPostalCode,
+			];
+		}
+		if ($personalEmailAdress || $personalPhoneCountry || $personalPhoneNumber) {
+			$partyParams["personalContact"] = [
+				"emailAdress" => $personalEmailAdress,
+				"phoneCountry" => $personalPhoneCountry,
+				"phoneNumber" => $personalPhoneNumber,
+			];
+		}
+		if ($companyEmailAdress || $companyPhoneCountry || $companyPhoneNumber) {
+			$partyParams["companyContact"] = [
+				"emailAdress" => $companyEmailAdress,
+				"phoneCountry" => $companyPhoneCountry,
+				"phoneNumber" => $companyPhoneNumber,
+			];
+		}
+		if ($createdByName) {
+			$partyParams["createdByName"] = $createdByName;
+		}
+		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
+	}
 
 	public function updatePartyStatus(string $partyCode, $newStatus): array
 	{
