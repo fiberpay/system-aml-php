@@ -48,35 +48,24 @@ class SystemAMLClient
 			"politicallyExposedFamily" => $politicallyExposedFamily,
 			"politicallyExposedCoworker" => $politicallyExposedCoworker,
 		];
-		if ($personalIdentityNumber) {
-			$partyParams["personalIdentityNumber"] = $personalIdentityNumber;
-		}
-		if ($birthDate) {
-			$partyParams["birthDate"] = $birthDate;
-		}
-		if ($birthCountry) {
-			$partyParams["birthCountry"] = $birthCountry;
-		}
-		if ($citizenship) {
-			$partyParams["citizenship"] = $citizenship;
-		}
-		if ($references) {
-			$partyParams["references"] = $references;
-		}
-		if ($birthCity) {
-			$partyParams["birthCity"] = $birthCity;
-		}
-		if ($documentType) {
-			$partyParams["documentType"] = $documentType;
-		}
-		if ($documentNumber) {
-			$partyParams["documentNumber"] = $documentNumber;
-		}
-		if ($documentExpirationDate) {
-			$partyParams["documentExpirationDate"] = $documentExpirationDate;
-		}
-		if ($withoutExpirationDate) {
-			$partyParams["withoutExpirationDate"] = $withoutExpirationDate;
+		$optionalParams = [
+			"personalIdentityNumber",
+			"birthDate",
+			"birthCountry",
+			"references",
+			"citizenship",
+			"birthCity",
+			"documentType",
+			"documentNumber",
+			"documentExpirationDate",
+			"withoutExpirationDate",
+			"createdByName",
+		];
+
+		foreach ($optionalParams as $paramName) {
+			if ($$paramName !== null) {
+				$partyParams[$paramName] = $$paramName;
+			}
 		}
 		if ($accommodationCountry || $accommodationCity || $accommodationStreet ||
 			$accommodationHouseNumber || $accommodationFlatNumber || $accommodationPostalCode) {
@@ -106,9 +95,6 @@ class SystemAMLClient
 				"phoneCountry" => $personalPhoneCountry,
 				"phoneNumber" => $personalPhoneNumber,
 			];
-		}
-		if ($createdByName) {
-			$partyParams["createdByName"] = $createdByName;
 		}
 		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
 	}
@@ -142,57 +128,37 @@ class SystemAMLClient
 			"taxIdNumber" => $taxIdNumber,
 			"companyName" => $companyName,
 		];
+
 		if ($mainPkdCode || $mainPkdName) {
 			$partyParams["mainPkdCode"] = [
 				"pkdCode" => $mainPkdCode,
 				"pkdName" => $mainPkdName,
 			];
 		}
-		if ($pkdCodes) {
-			$partyParams["pkdCodes"] = $pkdCodes;
+		$optionalParams = [
+			"registrationCountry" => $registrationCountry,
+			"pkdCodes" => $pkdCodes,
+			"companyIdentifier" => $companyIdentifier,
+			"nationalBusinessRegistryNumber" => $nationalBusinessRegistryNumber,
+			"tradeNames" => $tradeNames,
+			"personalIdentityNumber" => $personalIdentityNumber,
+			"birthDate" => $birthDate,
+			"birthCountry" => $birthCountry,
+			"references" => $references,
+			"citizenship" => $citizenship,
+			"birthCity" => $birthCity,
+			"documentType" => $documentType,
+			"documentNumber" => $documentNumber,
+			"documentExpirationDate" => $documentExpirationDate,
+			"withoutExpirationDate" => $withoutExpirationDate,
+			"createdByName" => $createdByName,
+		];
+		foreach ($optionalParams as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
 		}
-		if ($tradeNames) {
-			$partyParams["tradeNames"] = $tradeNames;
-		}
-		if ($companyIdentifier) {
-			$partyParams["companyIdentifier"] = $companyIdentifier;
-		}
-		if ($nationalBusinessRegistryNumber) {
-			$partyParams["nationalBusinessRegistryNumber"] = $nationalBusinessRegistryNumber;
-		}
-		if ($registrationCountry) {
-			$partyParams["registrationCountry"] = $registrationCountry;
-		}
-		if ($personalIdentityNumber) {
-			$partyParams["personalIdentityNumber"] = $personalIdentityNumber;
-		}
-		if ($birthDate) {
-			$partyParams["birthDate"] = $birthDate;
-		}
-		if ($birthCountry) {
-			$partyParams["birthCountry"] = $birthCountry;
-		}
-		if ($citizenship) {
-			$partyParams["citizenship"] = $citizenship;
-		}
-		if ($references) {
-			$partyParams["references"] = $references;
-		}
-		if ($birthCity) {
-			$partyParams["birthCity"] = $birthCity;
-		}
-		if ($documentType) {
-			$partyParams["documentType"] = $documentType;
-		}
-		if ($documentNumber) {
-			$partyParams["documentNumber"] = $documentNumber;
-		}
-		if ($documentExpirationDate) {
-			$partyParams["documentExpirationDate"] = $documentExpirationDate;
-		}
-		if ($withoutExpirationDate) {
-			$partyParams["withoutExpirationDate"] = $withoutExpirationDate;
-		}
+
 		if ($accommodationCountry || $accommodationCity || $accommodationStreet ||
 			$accommodationHouseNumber || $accommodationFlatNumber || $accommodationPostalCode) {
 			$partyParams["accommodationAddress"] = [
@@ -240,9 +206,6 @@ class SystemAMLClient
 				"phoneNumber" => $companyPhoneNumber,
 			];
 		}
-		if ($createdByName) {
-			$partyParams["createdByName"] = $createdByName;
-		}
 		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
 	}
 
@@ -266,41 +229,26 @@ class SystemAMLClient
 				"pkdName" => $mainPkdName,
 			];
 		}
-		if ($pkdCodes) {
-			$partyParams["pkdCodes"] = $pkdCodes;
-		}
-		if ($tradeNames) {
-			$partyParams["tradeNames"] = $tradeNames;
-		}
-		if ($companyIdentifier) {
-			$partyParams["companyIdentifier"] = $companyIdentifier;
-		}
-		if ($nationalBusinessRegistryNumber) {
-			$partyParams["nationalBusinessRegistryNumber"] = $nationalBusinessRegistryNumber;
-		}
-		if ($businessActivityForm) {
-			$partyParams["businessActivityForm"] = $businessActivityForm;
-		}
-		if ($nationalCourtRegistryNumber) {
-			$partyParams["nationalCourtRegistryNumber"] = $nationalCourtRegistryNumber;
-		}
-		if ($website) {
-			$partyParams["website"] = $website;
-		}
-		if ($beneficiaries) {
-			$partyParams["beneficiaries"] = $beneficiaries;
-		}
-		if ($boardMembers) {
-			$partyParams["boardMembers"] = $boardMembers;
-		}
-		if ($servicesDescription) {
-			$partyParams["servicesDescription"] = $servicesDescription;
-		}
-		if ($registrationCountry) {
-			$partyParams["registrationCountry"] = $registrationCountry;
-		}
-		if ($references) {
-			$partyParams["references"] = $references;
+		$optionalParams = [
+			"registrationCountry" => $registrationCountry,
+			"pkdCodes" => $pkdCodes,
+			"companyIdentifier" => $companyIdentifier,
+			"nationalBusinessRegistryNumber" => $nationalBusinessRegistryNumber,
+			"nationalCourtRegistryNumber" => $nationalCourtRegistryNumber,
+			"tradeNames" => $tradeNames,
+			"businessActivityForm" => $businessActivityForm,
+			"website" => $website,
+			"servicesDescription" => $servicesDescription,
+			"beneficiaries" => $beneficiaries,
+			"boardMembers" => $boardMembers,
+			"references" => $references,
+			"createdByName" => $createdByName,
+		];
+
+		foreach ($optionalParams as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
 		}
 		if ($businessCountry || $businessCity || $businessStreet ||
 			$businessHouseNumber || $businessFlatNumber || $businessPostalCode) {
@@ -319,9 +267,6 @@ class SystemAMLClient
 				"phoneCountry" => $companyPhoneCountry,
 				"phoneNumber" => $companyPhoneNumber,
 			];
-		}
-		if ($createdByName) {
-			$partyParams["createdByName"] = $createdByName;
 		}
 		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
 	}
@@ -369,17 +314,18 @@ class SystemAMLClient
 			"title" => $title,
 			"location" => $location,
 		];
-		if ($entities) {
-			$transactionParams["entities"] = $entities;
-		}
-		if ($references) {
-			$transactionParams["references"] = $references;
-		}
-		if ($description) {
-			$transactionParams["description"] = $description;
-		}
-		if ($createdByName) {
-			$transactionParams["createdByName"] = $createdByName;
+
+		$optionalParams = [
+			"entities" => $entities,
+			"description" => $description,
+			"references" => $references,
+			"createdByName" => $createdByName,
+		];
+
+		foreach ($optionalParams as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$transactionParams[$paramName] = $paramValue;
+			}
 		}
 		return $this->call(HttpMethod::POST, self::TRANSACTIONS_URI, $transactionParams);
 	}
