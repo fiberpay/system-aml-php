@@ -341,10 +341,13 @@ class SystemAMLClient
 		$uri = self::TRANSACTIONS_URI . '/' . $transactionCode;
 		return $this->call(HttpMethod::GET, $uri);
 	}
-
 	public function deleteTransaction(string $transactionCode): array {
 		$uri = self::TRANSACTIONS_URI . '/' . $transactionCode;
 		return $this->call(HttpMethod::DELETE, $uri);
+	}
+	public function recalculateModelRulesAndSuggestedRisk(string $modelCode, string $modelType): array {
+		$uri = "/rules/risk-recalculate?type=$modelType&code=$modelCode";
+		return $this->call(HttpMethod::GET, $uri);
 	}
 
 	/**

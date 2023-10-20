@@ -222,3 +222,6 @@ $ret = $client->getParty("8s4a617n3xgf");
 $ret = $client->updatePartyStatus("yvjhwpk4seu7", PartyStatus::INACTIVE);
 <!-- DELETE PARTY -->
 $ret = $client->deleteParty("8s4a617n3xgf");
+<!-- SUGGESTED RISK & RULES RECALCULATE -->
+$ret = $client->recalculateModelRulesAndSuggestedRisk("cwt74qxbuy5z", "party");
+
