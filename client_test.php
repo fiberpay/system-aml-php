@@ -16,24 +16,18 @@ $apiSecret = "670830d849b1a17622e330dc63a5c97f5f2841350d718ec865918717961b272b";
 $client = new SystemAMLClient($apiURL, $apiKey, $apiSecret);
 
 try {
-    $ret = $client->createSoleProprietorshipParty(
+    $ret = $client->createIndividualParty(
         status: PartyStatus::ACTIVE,
         firstName: "Jan",
         lastName: "Kowalski",
-        taxIdNumber: "3765151981",
-        companyName: "Usługi programistyczne",
-        personalIdentityNumber: "99120234518",
-        mainPkdCodeData:["pkdCode" => "01.12.Z", "pkdName" => "Uprawa ryżu"],
-        pkdCodes: [["pkdCode" => "01.15.Z","pkdName" => "Uprawa tytoniu"]],
-        pepData: ["politicallyExposed" => "no", "politicallyExposedCoworker" => "no", "politicallyExposedFamily" => "yes"],
-        companyData: ["nationalBusinessRegistryNumber" => "123456789", "tradeNames" => ["super firma", "moja firma","fajna firma"], "economicRelationStartDate" => "2020-01-01"],
-        personalData: ["birthCountry" => "PL", "birthCity" => "Warszawa", "citizenship" => "PL", "documentType" => "passport", "documentNumber" => "aze123123", "documentExpirationDate" => "2025-05-08", "withoutExpirationDate" => false],
-        otherParams: ["createdByName" => "Adam", "references" => "qwerty"],
+        personalIdentityNumber: "09271573233",
+        birthDate: "2000-01-12",
+        pepData: ["politicallyExposed" => "no", "politicallyExposedCoworker" => "no","politicallyExposedFamily" => "yes"],
+        personalData: ["birthCountry" => "PL", "birthCity" => "Warszawa", "citizenship" => "PL", "documentType" => "id_card", "documentNumber" => "aze123123", "documentExpirationDate" => "2025-05-15", "withoutExpirationDate" => false],
+        otherParams: ["createdByName" => "Kuba", "references" => "qwerty", "economicRelationStartDate" => "2020-01-01"],
+        accommodationAddressData: ["country" => "PL", "city" => "Warszawa", "street" => "Grzybowska", "houseNumber" => "4", "flatNumber" => "106", "PostalCode" => "00-131"],
         forwardAddressData: ["country" => "PL", "city" => "Warszawa", "street" => "Grzybowska", "houseNumber" => "4", "flatNumber" => "106", "postalCode" => "00-131"],
-        businessAddressData: ["country" => "PL", "city" => "Warszawa", "street" => "Grzybowska", "houseNumber" => "4", "flatNumber" => "106", "postalCode" => "00-131"],
-        accommodationAddressData: ["country" => "PL", "city" => "Warszawa", "street" => "Grzybowska", "houseNumber" => "4", "flatNumber" => "106", "postalCode" => "00-131"],
-        personalContactData:["emailAdress" => "info@fiberpay.pl", "phoneCountry" => "48", "phoneNumber" => "123123123"],
-        contactData: ["emailAdress" => "info@fiberpay.pl", "phoneCountry" => "48", "phoneNumber" => "123123123"]
+        personalContactData: ["emailAdress" => "info@fiberpay.pl", "phoneCountry" => "48","phoneNumber" => "123123123"],
     );
     var_dump($ret);
 } catch (Exception $e) {

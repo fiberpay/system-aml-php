@@ -26,75 +26,54 @@ class SystemAMLClient
 	/**
 	 * @throws SystemAMLException
 	 */
-	public function createIndividualParty($status, $firstName, $lastName, $politicallyExposed,
-										 $politicallyExposedFamily, $politicallyExposedCoworker,
-	 									 $personalIdentityNumber = null, $birthDate = null,
-										 $birthCountry = null, $references = null, $citizenship = null,
-										 $birthCity = null, $documentType = null, $documentNumber = null,
-										 $documentExpirationDate = null, $createdByName = null, $withoutExpirationDate = null,
-										 $accommodationCountry = null, $accommodationCity = null, $accommodationStreet = null,
-										 $accommodationHouseNumber = null, $accommodationFlatNumber = null,
-										 $accommodationPostalCode = null, $forwardCountry = null, $forwardCity = null,
-										 $forwardStreet = null, $forwardHouseNumber = null, $forwardFlatNumber = null,
-										 $forwardPostalCode = null, $personalEmailAdress = null,
-										 $personalPhoneCountry = null, $personalPhoneNumber = null
+	public function createIndividualParty($status, $firstName, $lastName, $personalIdentityNumber = null, $birthDate = null,
+										 $pepData = [], $personalData = [], $otherParams = [],
+										 $accommodationAddressData = [], $forwardAddressData = [], $personalContactData = []
 										 ): array {
 		$partyParams = [
 			"type" => PartyType::INDIVIDUAL,
 			"status" => $status,
 			"firstName" => $firstName,
 			"lastName" => $lastName,
-			"politicallyExposed" => $politicallyExposed,
-			"politicallyExposedFamily" => $politicallyExposedFamily,
-			"politicallyExposedCoworker" => $politicallyExposedCoworker,
 		];
-		$optionalParams = [
-			"personalIdentityNumber",
-			"birthDate",
-			"birthCountry",
-			"references",
-			"citizenship",
-			"birthCity",
-			"documentType",
-			"documentNumber",
-			"documentExpirationDate",
-			"withoutExpirationDate",
-			"createdByName",
-		];
-
-		foreach ($optionalParams as $paramName) {
-			if ($$paramName !== null) {
-				$partyParams[$paramName] = $$paramName;
+		//PEP data: politicallyExposed, politicallyExposedFamily, politicallyExposedCoworker
+		foreach ($pepData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
 			}
 		}
-		if ($accommodationCountry || $accommodationCity || $accommodationStreet ||
-			$accommodationHouseNumber || $accommodationFlatNumber || $accommodationPostalCode) {
-			$partyParams["accommodationAddress"] = [
-				"country" => $accommodationCountry,
-				"city" => $accommodationCity,
-				"street" => $accommodationStreet,
-				"houseNumber" => $accommodationHouseNumber,
-				"flatNumber" => $accommodationFlatNumber,
-				"postalCode" => $accommodationPostalCode,
-			];
+		//Personal data: birthCountry, birthCity, citizenship, documentType, documentNumber, documentExpirationDate, withoutExpirationDate
+		foreach ($personalData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
 		}
-		if ($forwardCountry || $forwardCity || $forwardStreet ||
-			$forwardHouseNumber || $forwardFlatNumber || $forwardPostalCode) {
-			$partyParams["forwardAddress"] = [
-				"country" => $forwardCountry,
-				"city" => $forwardCity,
-				"street" => $forwardStreet,
-				"houseNumber" => $forwardHouseNumber,
-				"flatNumber" => $forwardFlatNumber,
-				"postalCode" => $forwardPostalCode,
-			];
+		//Other params: references, createdByName, economicRelationStartDate
+		foreach ($otherParams as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
 		}
-		if ($personalEmailAdress || $personalPhoneCountry || $personalPhoneNumber) {
-			$partyParams["personalContact"] = [
-				"emailAdress" => $personalEmailAdress,
-				"phoneCountry" => $personalPhoneCountry,
-				"phoneNumber" => $personalPhoneNumber,
-			];
+		$optionalParams = [
+			"personalIdentityNumber" => $personalIdentityNumber,
+			"birthDate" => $birthDate,
+		];
+		foreach ($optionalParams as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		// Accommodation Data: [country, city, street, houseNumber, flatNumber, postalCode]
+		if (!empty($accommodationAddressData)) {
+			$partyParams["accommodationAddress"] = $accommodationAddressData;
+		}
+		// Forward Data: [country, city, street, houseNumber, flatNumber, postalCode]
+		if (!empty($forwardAddressData)) {
+			$partyParams["forwardAddress"] = $forwardAddressData;
+		}
+		// Personal contact Data: [phoneCountry, phoneNumber, emailAdress]
+		if (!empty($personalContactData)) {
+			$partyParams["personalContact"] = $personalContactData;
 		}
 		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
 	}
@@ -172,9 +151,9 @@ class SystemAMLClient
 		if (!empty($businessAddressData)) {
 			$partyParams["businessAddress"] = $businessAddressData;
 		}
-		// Contact Data: [phoneCountry, phoneNumber, emailAdress]
+		// Personal contact Data: [phoneCountry, phoneNumber, emailAdress]
 		if (!empty($personalContactData)) {
-			$partyParams["personalContact"] = $contactData;
+			$partyParams["personalContact"] = $personalContactData;
 		}
 		// Contact Data: [phoneCountry, phoneNumber, emailAdress]
 		if (!empty($contactData)) {
