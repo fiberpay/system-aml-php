@@ -209,40 +209,45 @@ class SystemAMLClient
 		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
 	}
 
-	public function createCompanyParty($status, $taxIdNumber, $companyName, $businessActivityForm = null, $mainPkdCode = null,
-									  $mainPkdName = null, $registrationCountry = null, $pkdCodes = [], $companyIdentifier = null,
-									  $nationalBusinessRegistryNumber = null, $nationalCourtRegistryNumber = null, $tradeNames = null,
-									  $website = null, $servicesDescription = null, $beneficiaries = [], $boardMembers = [],
-									  $references = null, $createdByName = null, $businessCountry = null, $businessCity = null,
-									  $businessStreet = null, $businessHouseNumber = null, $businessFlatNumber = null,
-									  $businessPostalCode = null, $companyEmailAdress = null, $companyPhoneCountry = null,
-									  $companyPhoneNumber = null ): array {
+	public function createCompanyParty($status, $taxIdNumber, $companyName, $mainPkdCodeData = [],
+									   $withoutNipData = [], $pkdCodes = [], $beneficiaries = [], $boardMembers = [],
+									   $companyData = [], $otherParams = [], $businessAddressData = [], $contactData = []
+									  ): array {
 		$partyParams = [
 			"type" => PartyType::COMPANY,
 			"status" => $status,
 			"taxIdNumber" => $taxIdNumber,
 			"companyName" => $companyName,
 		];
-		if ($mainPkdCode || $mainPkdName) {
+		// Main PKD data
+		if (!empty($mainPkdCodeData)) {
 			$partyParams["mainPkdCode"] = [
-				"pkdCode" => $mainPkdCode,
-				"pkdName" => $mainPkdName,
+				"pkdCode" => $mainPkdCodeData["pkdCode"] ?? null,
+				"pkdName" => $mainPkdCodeData["pkdName"] ?? null,
 			];
 		}
+		// Without NIP data: companyIdentifier, registrationCountry
+		foreach ($withoutNipData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		//Company data: businessActivityForm, nationalBusinessRegistryNumber, nationalCourtRegistryNumber, economicRelationStartDate
+		foreach ($companyData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		//Other params: tradeNames, website, servicesDescription, references, createdByName
+		foreach ($otherParams as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
 		$optionalParams = [
-			"registrationCountry" => $registrationCountry,
 			"pkdCodes" => $pkdCodes,
-			"companyIdentifier" => $companyIdentifier,
-			"nationalBusinessRegistryNumber" => $nationalBusinessRegistryNumber,
-			"nationalCourtRegistryNumber" => $nationalCourtRegistryNumber,
-			"tradeNames" => $tradeNames,
-			"businessActivityForm" => $businessActivityForm,
-			"website" => $website,
-			"servicesDescription" => $servicesDescription,
 			"beneficiaries" => $beneficiaries,
 			"boardMembers" => $boardMembers,
-			"references" => $references,
-			"createdByName" => $createdByName,
 		];
 
 		foreach ($optionalParams as $paramName => $paramValue) {
@@ -250,23 +255,13 @@ class SystemAMLClient
 				$partyParams[$paramName] = $paramValue;
 			}
 		}
-		if ($businessCountry || $businessCity || $businessStreet ||
-			$businessHouseNumber || $businessFlatNumber || $businessPostalCode) {
-			$partyParams["businessAddress"] = [
-				"country" => $businessCountry,
-				"city" => $businessCity,
-				"street" => $businessStreet,
-				"houseNumber" => $businessHouseNumber,
-				"flatNumber" => $businessFlatNumber,
-				"postalCode" => $businessPostalCode,
-			];
+		// Business Data: [country, city, street, houseNumber, flatNumber, postalCode]
+		if (!empty($businessAddressData)) {
+			$partyParams["businessAddress"] = $businessAddressData;
 		}
-		if ($companyEmailAdress || $companyPhoneCountry || $companyPhoneNumber) {
-			$partyParams["companyContact"] = [
-				"emailAdress" => $companyEmailAdress,
-				"phoneCountry" => $companyPhoneCountry,
-				"phoneNumber" => $companyPhoneNumber,
-			];
+		// Contact Data: [phoneCountry, phoneNumber, emailAdress]
+		if (!empty($contactData)) {
+			$partyParams["companyContact"] = $contactData;
 		}
 		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
 	}

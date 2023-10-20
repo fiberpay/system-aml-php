@@ -9,9 +9,9 @@ use FiberPay\SystemAML\RequestParams\Transaction\TransactionType;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-// $apiURL = 'Twoj super URL do serwera';
-// $apiKey = "asd";
-// $apiSecret = "asd2";
+$apiURL = 'https://amlapidev2.fiberpay.pl';
+$apiKey = "kC1tJVSUIVfxjGPd";
+$apiSecret = "670830d849b1a17622e330dc63a5c97f5f2841350d718ec865918717961b272b";
 
 $client = new SystemAMLClient($apiURL, $apiKey, $apiSecret);
 
@@ -20,25 +20,8 @@ try {
         status: PartyStatus::ACTIVE,
         companyName: "FiberPay",
         taxIdNumber: "7010634566",
-        nationalBusinessRegistryNumber: "147302566",
-        tradeNames: ["FiberPay", "SystemAML"],
-        nationalCourtRegistryNumber: "0000512707",
-        businessActivityForm: "stock_company",
-        website: "fiberpay.pl",
-        references: "qwerty",
-        businessCountry: "PL",
-        businessCity: "Warszawa",
-        businessStreet: "Grzybowska",
-        businessHouseNumber: "4",
-        businessFlatNumber: "106",
-        businessPostalCode: "00-131",
-        companyEmailAdress: "info@fiberpay.pl",
-        companyPhoneCountry: "48",
-        companyPhoneNumber: "123123123",
-        servicesDescription: "Usługi płatnicze",
-        createdByName: "Wojtek",
-        mainPkdCode: "64.99.Z",
-        mainPkdName: "POZOSTAŁA FINANSOWA DZIAŁALNOŚĆ USŁUGOWA, GDZIE INDZIEJ NIESKLASYFIKOWANA, Z WYŁĄCZENIEM UBEZPIECZEŃ I FUNDUSZÓW EMERYTALNYCH",
+        mainPkdCodeData: [ "pkdCode"=> "64.99.Z", "pkdName" => "POZOSTAŁA FINANSOWA DZIAŁALNOŚĆ USŁUGOWA, GDZIE INDZIEJ NIESKLASYFIKOWANA, Z WYŁĄCZENIEM UBEZPIECZEŃ I FUNDUSZÓW EMERYTALNYCH"],
+        withoutNipData: [],
         pkdCodes: [
             [
             "pkdCode" => "58.29.Z",
@@ -109,7 +92,11 @@ try {
             "politicallyExposed" => "yes",
             "withoutExpirationDate" => false,
             ]
-        ]
+            ],
+        companyData: [ "nationalBusinessRegistryNumber" => "147302566", "nationalCourtRegistryNumber" => "0000512707", "businessActivityForm" => "stock_company", "economicRelationStartDate" => "2020-01-01"],
+        otherParams:[ "tradeNames" => ["FiberPay", "SystemAML"], "website" => "fiberpay.pl", "references" => "qwerty", "servicesDescription" => "Usługi płatnicze", "createdByName" => "Wojtek"],
+        businessAddressData: [ "country" => "PL", "city" => "Warszawa", "street" => "Grzybowska", "houseNumber" => "4", "flatNumber" => "106", "postalCode" => "00-131"],
+        contactData: ["emailAdress" => "info@fiberpay.pl", "phoneCountry" => "48", "phoneNumber" => "123123123"]
     );
     var_dump($ret);
 } catch (Exception $e) {
