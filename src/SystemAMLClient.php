@@ -98,113 +98,87 @@ class SystemAMLClient
 		}
 		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
 	}
-	public function createSoleProprietorshipParty($status, $firstName, $lastName, $politicallyExposed,
-										 $politicallyExposedFamily, $politicallyExposedCoworker,
-										 $taxIdNumber, $companyName, $mainPkdCode = null, $mainPkdName = null,
-										 $registrationCountry = null, $pkdCodes = [],
-										 $companyIdentifier = null, $nationalBusinessRegistryNumber = null, $tradeNames = null,
-										 $personalIdentityNumber = null, $birthDate = null,
-										 $birthCountry = null, $references = null, $citizenship = null,
-										 $birthCity = null, $documentType = null, $documentNumber = null,
-										 $documentExpirationDate = null, $createdByName = null, $withoutExpirationDate = null,
-										 $accommodationCountry = null, $accommodationCity = null, $accommodationStreet = null,
-										 $accommodationHouseNumber = null, $accommodationFlatNumber = null,
-										 $accommodationPostalCode = null, $forwardCountry = null, $forwardCity = null,
-										 $forwardStreet = null, $forwardHouseNumber = null, $forwardFlatNumber = null,
-										 $forwardPostalCode = null, $businessCountry = null, $businessCity = null,
-										 $businessStreet = null, $businessHouseNumber = null, $businessFlatNumber = null,
-										 $businessPostalCode = null, $personalEmailAdress = null,
-										 $personalPhoneCountry = null, $personalPhoneNumber = null, $companyEmailAdress = null,
-										 $companyPhoneCountry = null, $companyPhoneNumber = null
-										 ): array {
+	public function createSoleProprietorshipParty($status, $firstName, $lastName, $taxIdNumber, $companyName, $birthDate = null,
+										 $personalIdentityNumber = null, $withoutNipData = [], $mainPkdCodeData = [],
+										 $pkdCodes = [], $pepData = [], $companyData = [], $personalData = [],
+										 $otherParams = [], $accommodationAddressData = [], $forwardAddressData = [],
+										 $businessAddressData = [], $personalContactData = [], $contactData = []
+										): array {
 		$partyParams = [
 			"type" => PartyType::SOLE_PROPRIETORSHIP,
 			"status" => $status,
 			"firstName" => $firstName,
 			"lastName" => $lastName,
-			"politicallyExposed" => $politicallyExposed,
-			"politicallyExposedFamily" => $politicallyExposedFamily,
-			"politicallyExposedCoworker" => $politicallyExposedCoworker,
 			"taxIdNumber" => $taxIdNumber,
 			"companyName" => $companyName,
 		];
 
-		if ($mainPkdCode || $mainPkdName) {
+		// Main PKD data: pkdCode, pkdName
+		if (!empty($mainPkdCodeData)) {
 			$partyParams["mainPkdCode"] = [
-				"pkdCode" => $mainPkdCode,
-				"pkdName" => $mainPkdName,
+				"pkdCode" => $mainPkdCodeData["pkdCode"] ?? null,
+				"pkdName" => $mainPkdCodeData["pkdName"] ?? null,
 			];
 		}
+		// Without NIP data: companyIdentifier, registrationCountry
+		foreach ($withoutNipData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		//Company data: nationalBusinessRegistryNumber, tradeNames, economicRelationStartDate
+		foreach ($companyData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		//PEP data: politicallyExposed, politicallyExposedFamily, politicallyExposedCoworker
+		foreach ($pepData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		//Personal data: birthCountry, birthCity, citizenship, documentType, documentNumber, documentExpirationDate, withoutExpirationDate
+		foreach ($personalData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		//Other params: references, createdByName
+		foreach ($otherParams as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
 		$optionalParams = [
-			"registrationCountry" => $registrationCountry,
 			"pkdCodes" => $pkdCodes,
-			"companyIdentifier" => $companyIdentifier,
-			"nationalBusinessRegistryNumber" => $nationalBusinessRegistryNumber,
-			"tradeNames" => $tradeNames,
 			"personalIdentityNumber" => $personalIdentityNumber,
 			"birthDate" => $birthDate,
-			"birthCountry" => $birthCountry,
-			"references" => $references,
-			"citizenship" => $citizenship,
-			"birthCity" => $birthCity,
-			"documentType" => $documentType,
-			"documentNumber" => $documentNumber,
-			"documentExpirationDate" => $documentExpirationDate,
-			"withoutExpirationDate" => $withoutExpirationDate,
-			"createdByName" => $createdByName,
 		];
 		foreach ($optionalParams as $paramName => $paramValue) {
 			if ($paramValue !== null) {
 				$partyParams[$paramName] = $paramValue;
 			}
 		}
-
-		if ($accommodationCountry || $accommodationCity || $accommodationStreet ||
-			$accommodationHouseNumber || $accommodationFlatNumber || $accommodationPostalCode) {
-			$partyParams["accommodationAddress"] = [
-				"country" => $accommodationCountry,
-				"city" => $accommodationCity,
-				"street" => $accommodationStreet,
-				"houseNumber" => $accommodationHouseNumber,
-				"flatNumber" => $accommodationFlatNumber,
-				"postalCode" => $accommodationPostalCode,
-			];
+		// Accommodation Data: [country, city, street, houseNumber, flatNumber, postalCode]
+		if (!empty($accommodationAddressData)) {
+			$partyParams["accommodationAddress"] = $accommodationAddressData;
 		}
-		if ($forwardCountry || $forwardCity || $forwardStreet ||
-			$forwardHouseNumber || $forwardFlatNumber || $forwardPostalCode) {
-			$partyParams["forwardAddress"] = [
-				"country" => $forwardCountry,
-				"city" => $forwardCity,
-				"street" => $forwardStreet,
-				"houseNumber" => $forwardHouseNumber,
-				"flatNumber" => $forwardFlatNumber,
-				"postalCode" => $forwardPostalCode,
-			];
+		// Forward Data: [country, city, street, houseNumber, flatNumber, postalCode]
+		if (!empty($forwardAddressData)) {
+			$partyParams["forwardAddress"] = $forwardAddressData;
 		}
-		if ($businessCountry || $businessCity || $businessStreet ||
-			$businessHouseNumber || $businessFlatNumber || $businessPostalCode) {
-			$partyParams["businessAddress"] = [
-				"country" => $businessCountry,
-				"city" => $businessCity,
-				"street" => $businessStreet,
-				"houseNumber" => $businessHouseNumber,
-				"flatNumber" => $businessFlatNumber,
-				"postalCode" => $businessPostalCode,
-			];
+		// Business Data: [country, city, street, houseNumber, flatNumber, postalCode]
+		if (!empty($businessAddressData)) {
+			$partyParams["businessAddress"] = $businessAddressData;
 		}
-		if ($personalEmailAdress || $personalPhoneCountry || $personalPhoneNumber) {
-			$partyParams["personalContact"] = [
-				"emailAdress" => $personalEmailAdress,
-				"phoneCountry" => $personalPhoneCountry,
-				"phoneNumber" => $personalPhoneNumber,
-			];
+		// Contact Data: [phoneCountry, phoneNumber, emailAdress]
+		if (!empty($personalContactData)) {
+			$partyParams["personalContact"] = $contactData;
 		}
-		if ($companyEmailAdress || $companyPhoneCountry || $companyPhoneNumber) {
-			$partyParams["companyContact"] = [
-				"emailAdress" => $companyEmailAdress,
-				"phoneCountry" => $companyPhoneCountry,
-				"phoneNumber" => $companyPhoneNumber,
-			];
+		// Contact Data: [phoneCountry, phoneNumber, emailAdress]
+		if (!empty($contactData)) {
+			$partyParams["companyContact"] = $contactData;
 		}
 		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
 	}
@@ -219,7 +193,7 @@ class SystemAMLClient
 			"taxIdNumber" => $taxIdNumber,
 			"companyName" => $companyName,
 		];
-		// Main PKD data
+		// Main PKD data: pkdCode, pkdName
 		if (!empty($mainPkdCodeData)) {
 			$partyParams["mainPkdCode"] = [
 				"pkdCode" => $mainPkdCodeData["pkdCode"] ?? null,
