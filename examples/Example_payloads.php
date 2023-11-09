@@ -73,12 +73,12 @@ $ret = $client->createCompanyParty(
     withoutNipData: [],
     pkdCodes: [
         [
-        "pkdCode" => "58.29.Z",
-        "pkdName" => "DZIAŁALNOŚĆ WYDAWNICZA W ZAKRESIE POZOSTAŁEGO OPROGRAMOWANIA"
+            "pkdCode" => "58.29.Z",
+            "pkdName" => "DZIAŁALNOŚĆ WYDAWNICZA W ZAKRESIE POZOSTAŁEGO OPROGRAMOWANIA"
         ],
         [
-        "pkdCode" => "62.01.Z",
-        "pkdName" => "DZIAŁALNOŚĆ ZWIĄZANA Z OPROGRAMOWANIEM"
+            "pkdCode" => "62.01.Z",
+            "pkdName" => "DZIAŁALNOŚĆ ZWIĄZANA Z OPROGRAMOWANIEM"
         ]
     ],
     beneficiaries: [
@@ -96,8 +96,8 @@ $ret = $client->createCompanyParty(
             "personalIdentityNumber" => "64091098920",
             "politicallyExposed" => "no",
             "withoutExpirationDate" => false,
-            ],
-            [
+        ],
+        [
             "birthCountry" => "DE",
             "directRights" => "3M",
             "birthCity" => "Germany",
@@ -127,8 +127,9 @@ $ret = $client->createCompanyParty(
             "personalIdentityNumber" => "31111161119",
             "politicallyExposed" => "no",
             "withoutExpirationDate" => false,
-            ],
-            [
+            "roleType" => "president",
+        ],
+        [
             "birthCity" => "Warszawa",
             "birthDate" => "2001-01-01",
             "birthCountry" => "PL",
@@ -140,8 +141,9 @@ $ret = $client->createCompanyParty(
             "lastName" => "Nowak",
             "politicallyExposed" => "yes",
             "withoutExpirationDate" => false,
-            ]
-        ],
+            "roleType" => "other",
+        ]
+    ],
     companyData: [ "nationalBusinessRegistryNumber" => "147302566", "nationalCourtRegistryNumber" => "0000512707", "businessActivityForm" => "stock_company", "economicRelationStartDate" => "2020-01-01"],
     otherParams:[ "tradeNames" => ["FiberPay", "SystemAML"], "website" => "fiberpay.pl", "references" => "qwerty", "servicesDescription" => "Usługi płatnicze", "createdByName" => "Wojtek"],
     businessAddressData: [ "country" => "PL", "city" => "Warszawa", "street" => "Grzybowska", "houseNumber" => "4", "flatNumber" => "106", "postalCode" => "00-131"],

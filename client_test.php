@@ -9,25 +9,96 @@ use FiberPay\SystemAML\RequestParams\Transaction\TransactionType;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$apiURL = 'https://amlapidev2.fiberpay.pl';
-$apiKey = "kC1tJVSUIVfxjGPd";
-$apiSecret = "670830d849b1a17622e330dc63a5c97f5f2841350d718ec865918717961b272b";
+$apiURL = 'apiURL';
+$apiKey = "apiKey";
+$apiSecret = "apiSecret";
 
 $client = new SystemAMLClient($apiURL, $apiKey, $apiSecret);
 
 try {
-    $ret = $client->createIndividualParty(
+    $ret = $client->createCompanyParty(
         status: PartyStatus::ACTIVE,
-        firstName: "Jan",
-        lastName: "Kowalski",
-        personalIdentityNumber: "09271573233",
-        birthDate: "2000-01-12",
-        pepData: ["politicallyExposed" => "no", "politicallyExposedCoworker" => "no","politicallyExposedFamily" => "yes"],
-        personalData: ["birthCountry" => "PL", "birthCity" => "Warszawa", "citizenship" => "PL", "documentType" => "id_card", "documentNumber" => "aze123123", "documentExpirationDate" => "2025-05-15", "withoutExpirationDate" => false],
-        otherParams: ["createdByName" => "Kuba", "references" => "qwerty", "economicRelationStartDate" => "2020-01-01"],
-        accommodationAddressData: ["country" => "PL", "city" => "Warszawa", "street" => "Grzybowska", "houseNumber" => "4", "flatNumber" => "106", "PostalCode" => "00-131"],
-        forwardAddressData: ["country" => "PL", "city" => "Warszawa", "street" => "Grzybowska", "houseNumber" => "4", "flatNumber" => "106", "postalCode" => "00-131"],
-        personalContactData: ["emailAdress" => "info@fiberpay.pl", "phoneCountry" => "48","phoneNumber" => "123123123"],
+        companyName: "FiberPay",
+        taxIdNumber: "7010634566",
+        mainPkdCodeData: [ "pkdCode"=> "64.99.Z", "pkdName" => "POZOSTAŁA FINANSOWA DZIAŁALNOŚĆ USŁUGOWA, GDZIE INDZIEJ NIESKLASYFIKOWANA, Z WYŁĄCZENIEM UBEZPIECZEŃ I FUNDUSZÓW EMERYTALNYCH"],
+        withoutNipData: [],
+        pkdCodes: [
+            [
+            "pkdCode" => "58.29.Z",
+            "pkdName" => "DZIAŁALNOŚĆ WYDAWNICZA W ZAKRESIE POZOSTAŁEGO OPROGRAMOWANIA"
+            ],
+            [
+            "pkdCode" => "62.01.Z",
+            "pkdName" => "DZIAŁALNOŚĆ ZWIĄZANA Z OPROGRAMOWANIEM"
+            ]
+        ],
+        beneficiaries: [
+            [
+                "birthCountry" => "PL",
+                "directRights" => "ABB",
+                "birthCity" => "Warszawa",
+                "citizenship" => "PL",
+                "documentNumber" => "aze123123",
+                "documentType" => "id_card",
+                "firstName" => "Jan",
+                "lastName" => "Kowalski",
+                "ownedSharesAmount" => "45",
+                "ownedSharesUnit" => "%",
+                "personalIdentityNumber" => "64091098920",
+                "politicallyExposed" => "no",
+                "withoutExpirationDate" => false,
+                ],
+                [
+                "birthCountry" => "DE",
+                "directRights" => "3M",
+                "birthCity" => "Germany",
+                "birthDate" => "2002-10-01",
+                "citizenship" => "DE",
+                "documentNumber" => "aze423",
+                "documentType" => "id_card",
+                "firstName" => "Hans",
+                "lastName" => "Podolski",
+                "ownedSharesAmount" => "15",
+                "ownedSharesUnit" => "%",
+                "politicallyExposed" => "no",
+                "withoutExpirationDate" => false,
+                ],
+            ],
+        boardMembers: [
+            [
+                "birthCity" => "Warszawa",
+                "birthDate" => "2001-01-01",
+                "birthCountry" => "PL",
+                "citizenship" => "PL",
+                "description" => "Prezes",
+                "documentNumber" => "aze123123",
+                "documentType" => "id_card",
+                "firstName" => "Jan",
+                "lastName" => "Kowalski",
+                "personalIdentityNumber" => "31111161119",
+                "politicallyExposed" => "no",
+                "withoutExpirationDate" => false,
+                "roleType" => "president",
+            ],
+            [
+                "birthCity" => "Warszawa",
+                "birthDate" => "2001-01-01",
+                "birthCountry" => "PL",
+                "citizenship" => "PL",
+                "description" => "Wiceprezes",
+                "documentNumber" => "aze129923",
+                "documentType" => "id_card",
+                "firstName" => "Adam",
+                "lastName" => "Nowak",
+                "politicallyExposed" => "yes",
+                "withoutExpirationDate" => false,
+                "roleType" => "other",
+                ]
+            ],
+        companyData: [ "nationalBusinessRegistryNumber" => "147302566", "nationalCourtRegistryNumber" => "0000512707", "businessActivityForm" => "stock_company", "economicRelationStartDate" => "2020-01-01"],
+        otherParams:[ "tradeNames" => ["FiberPay", "SystemAML"], "website" => "fiberpay.pl", "references" => "qwerty", "servicesDescription" => "Usługi płatnicze", "createdByName" => "Wojtek"],
+        businessAddressData: [ "country" => "PL", "city" => "Warszawa", "street" => "Grzybowska", "houseNumber" => "4", "flatNumber" => "106", "postalCode" => "00-131"],
+        contactData: ["emailAdress" => "info@fiberpay.pl", "phoneCountry" => "48", "phoneNumber" => "123123123"]
     );
     var_dump($ret);
 } catch (Exception $e) {
