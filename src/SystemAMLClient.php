@@ -3,7 +3,8 @@
 namespace FiberPay\SystemAML;
 
 use FiberPay\SystemAML\RequestParams\Party\PartyParams;
-use FiberPay\SystemAML\RequestParams\Transaction\TransactionParams;
+use FiberPay\SystemAML\RequestParams\Constants\HttpMethod;
+use FiberPay\SystemAML\RequestParams\Party\PartyType;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -24,10 +25,214 @@ class SystemAMLClient
 
 	/**
 	 * @throws SystemAMLException
+	 */
+	public function createIndividualParty($status, $firstName, $lastName, $personalIdentityNumber = null, $birthDate = null,
+										 $pepData = [], $personalData = [], $otherParams = [],
+										 $accommodationAddressData = [], $forwardAddressData = [], $personalContactData = []
+										 ): array {
+		$partyParams = [
+			"type" => PartyType::INDIVIDUAL,
+			"status" => $status,
+			"firstName" => $firstName,
+			"lastName" => $lastName,
+		];
+		//PEP data: politicallyExposed, politicallyExposedFamily, politicallyExposedCoworker
+		foreach ($pepData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		//Personal data: birthCountry, birthCity, citizenship, documentType, documentNumber, documentExpirationDate, withoutExpirationDate
+		foreach ($personalData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		//Other params: references, createdByName, economicRelationStartDate
+		foreach ($otherParams as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		$optionalParams = [
+			"personalIdentityNumber" => $personalIdentityNumber,
+			"birthDate" => $birthDate,
+		];
+		foreach ($optionalParams as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		// Accommodation Data: [country, city, street, houseNumber, flatNumber, postalCode]
+		if (!empty($accommodationAddressData)) {
+			$partyParams["accommodationAddress"] = $accommodationAddressData;
+		}
+		// Forward Data: [country, city, street, houseNumber, flatNumber, postalCode]
+		if (!empty($forwardAddressData)) {
+			$partyParams["forwardAddress"] = $forwardAddressData;
+		}
+		// Personal contact Data: [phoneCountry, phoneNumber, emailAdress]
+		if (!empty($personalContactData)) {
+			$partyParams["personalContact"] = $personalContactData;
+		}
+		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
+	}
+	public function createSoleProprietorshipParty($status, $firstName, $lastName, $taxIdNumber, $companyName, $birthDate = null,
+										 $personalIdentityNumber = null, $withoutNipData = [], $mainPkdCodeData = [],
+										 $pkdCodes = [], $pepData = [], $companyData = [], $personalData = [],
+										 $otherParams = [], $accommodationAddressData = [], $forwardAddressData = [],
+										 $businessAddressData = [], $personalContactData = [], $contactData = []
+										): array {
+		$partyParams = [
+			"type" => PartyType::SOLE_PROPRIETORSHIP,
+			"status" => $status,
+			"firstName" => $firstName,
+			"lastName" => $lastName,
+			"taxIdNumber" => $taxIdNumber,
+			"companyName" => $companyName,
+		];
+
+		// Main PKD data: pkdCode, pkdName
+		if (!empty($mainPkdCodeData)) {
+			$partyParams["mainPkdCode"] = [
+				"pkdCode" => $mainPkdCodeData["pkdCode"] ?? null,
+				"pkdName" => $mainPkdCodeData["pkdName"] ?? null,
+			];
+		}
+		// Without NIP data: companyIdentifier, registrationCountry
+		foreach ($withoutNipData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		//Company data: nationalBusinessRegistryNumber, tradeNames, economicRelationStartDate
+		foreach ($companyData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		//PEP data: politicallyExposed, politicallyExposedFamily, politicallyExposedCoworker
+		foreach ($pepData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		//Personal data: birthCountry, birthCity, citizenship, documentType, documentNumber, documentExpirationDate, withoutExpirationDate
+		foreach ($personalData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		//Other params: references, createdByName
+		foreach ($otherParams as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		$optionalParams = [
+			"pkdCodes" => $pkdCodes,
+			"personalIdentityNumber" => $personalIdentityNumber,
+			"birthDate" => $birthDate,
+		];
+		foreach ($optionalParams as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		// Accommodation Data: [country, city, street, houseNumber, flatNumber, postalCode]
+		if (!empty($accommodationAddressData)) {
+			$partyParams["accommodationAddress"] = $accommodationAddressData;
+		}
+		// Forward Data: [country, city, street, houseNumber, flatNumber, postalCode]
+		if (!empty($forwardAddressData)) {
+			$partyParams["forwardAddress"] = $forwardAddressData;
+		}
+		// Business Data: [country, city, street, houseNumber, flatNumber, postalCode]
+		if (!empty($businessAddressData)) {
+			$partyParams["businessAddress"] = $businessAddressData;
+		}
+		// Personal contact Data: [phoneCountry, phoneNumber, emailAdress]
+		if (!empty($personalContactData)) {
+			$partyParams["personalContact"] = $personalContactData;
+		}
+		// Contact Data: [phoneCountry, phoneNumber, emailAdress]
+		if (!empty($contactData)) {
+			$partyParams["companyContact"] = $contactData;
+		}
+		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
+	}
+
+	public function createCompanyParty($status, $taxIdNumber, $companyName, $mainPkdCodeData = [],
+									   $withoutNipData = [], $pkdCodes = [], $beneficiaries = [], $boardMembers = [],
+									   $companyData = [], $otherParams = [], $businessAddressData = [], $contactData = []
+									  ): array {
+		$partyParams = [
+			"type" => PartyType::COMPANY,
+			"status" => $status,
+			"taxIdNumber" => $taxIdNumber,
+			"companyName" => $companyName,
+		];
+		// Main PKD data: pkdCode, pkdName
+		if (!empty($mainPkdCodeData)) {
+			$partyParams["mainPkdCode"] = [
+				"pkdCode" => $mainPkdCodeData["pkdCode"] ?? null,
+				"pkdName" => $mainPkdCodeData["pkdName"] ?? null,
+			];
+		}
+		// Without NIP data: companyIdentifier, registrationCountry
+		foreach ($withoutNipData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		//Company data: businessActivityForm, nationalBusinessRegistryNumber, nationalCourtRegistryNumber, economicRelationStartDate
+		foreach ($companyData as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		//Other params: tradeNames, website, servicesDescription, references, createdByName
+		foreach ($otherParams as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		$optionalParams = [
+			"pkdCodes" => $pkdCodes,
+			"beneficiaries" => $beneficiaries,
+			"boardMembers" => $boardMembers,
+		];
+
+		foreach ($optionalParams as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$partyParams[$paramName] = $paramValue;
+			}
+		}
+		// Business Data: [country, city, street, houseNumber, flatNumber, postalCode]
+		if (!empty($businessAddressData)) {
+			$partyParams["businessAddress"] = $businessAddressData;
+		}
+		// Contact Data: [phoneCountry, phoneNumber, emailAdress]
+		if (!empty($contactData)) {
+			$partyParams["companyContact"] = $contactData;
+		}
+		return $this->call(HttpMethod::POST, self::PARTIES_URI, $partyParams);
+	}
+
+	public function updatePartyStatus(string $partyCode, $newStatus): array
+	{
+		$partyParams = [
+			"newStatus" => $newStatus
+		];
+		$uri = self::PARTIES_URI . '/' . $partyCode . '/status';
+		return $this->call(HttpMethod::POST, $uri, $partyParams);
+	}
+
+	/**
+	 * @throws SystemAMLException
 	 * @noinspection PhpUnused
 	 */
-	public function getParty(string $partyCode): array
-	{
+	public function getParty(string $partyCode): array {
 		$uri = self::PARTIES_URI . '/' . $partyCode;
 		return $this->call(HttpMethod::GET, $uri);
 	}
@@ -35,25 +240,7 @@ class SystemAMLClient
 	/**
 	 * @throws SystemAMLException
 	 */
-	public function createParty(PartyParams $request): array
-	{
-		return $this->call(HttpMethod::POST, self::PARTIES_URI, $request->toArray());
-	}
-
-	/**
-	 * @throws SystemAMLException
-	 */
-	public function updateParty(string $partyCode, PartyParams $request): array
-	{
-		$uri = self::PARTIES_URI . '/' . $partyCode;
-		return $this->call(HttpMethod::PUT, $uri, $request->toArray());
-	}
-
-	/**
-	 * @throws SystemAMLException
-	 */
-	public function deleteParty(string $partyCode): array
-	{
+	public function deleteParty(string $partyCode): array {
 		$uri = self::PARTIES_URI . '/' . $partyCode;
 		return $this->call(HttpMethod::DELETE, $uri);
 	}
@@ -61,9 +248,54 @@ class SystemAMLClient
 	/**
 	 * @throws SystemAMLException
 	 */
-	public function createTransaction(TransactionParams $transactionParams): array
-	{
-		return $this->call(HttpMethod::POST, self::TRANSACTIONS_URI, $transactionParams->toArray());
+	public function createTransaction($status, $type, $occasionalTransaction, $amount, $currency,
+									 $bookedAt, $paymentMethod, $title, $location, $entities = [],
+									 $description = null, $references = null, $createdByName = null): array {
+		$transactionParams = [
+			"status" => $status,
+			"type" => $type,
+			"occasionalTransaction" => $occasionalTransaction,
+			"amount" => $amount,
+			"currency" => $currency,
+			"bookedAt" => $bookedAt,
+			"paymentMethod" => $paymentMethod,
+			"title" => $title,
+			"location" => $location,
+		];
+
+		$optionalParams = [
+			"entities" => $entities,
+			"description" => $description,
+			"references" => $references,
+			"createdByName" => $createdByName,
+		];
+
+		foreach ($optionalParams as $paramName => $paramValue) {
+			if ($paramValue !== null) {
+				$transactionParams[$paramName] = $paramValue;
+			}
+		}
+		return $this->call(HttpMethod::POST, self::TRANSACTIONS_URI, $transactionParams);
+	}
+
+	public function updateTransactionStatus(string $transactionCode, $newStatus): array {
+		$transactionParams = [
+			"newStatus" => $newStatus
+		];
+		$uri = self::TRANSACTIONS_URI . '/' . $transactionCode . '/status';
+		return $this->call(HttpMethod::POST, $uri, $transactionParams);
+	}
+	public function getTransaction(string $transactionCode): array {
+		$uri = self::TRANSACTIONS_URI . '/' . $transactionCode;
+		return $this->call(HttpMethod::GET, $uri);
+	}
+	public function deleteTransaction(string $transactionCode): array {
+		$uri = self::TRANSACTIONS_URI . '/' . $transactionCode;
+		return $this->call(HttpMethod::DELETE, $uri);
+	}
+	public function recalculateModelRulesAndSuggestedRisk(string $modelCode, string $modelType): array {
+		$uri = "/rules/risk-recalculate?type=$modelType&code=$modelCode";
+		return $this->call(HttpMethod::GET, $uri);
 	}
 
 	/**
@@ -120,7 +352,7 @@ class SystemAMLClient
 			"Api-Key: $this->apiKey",
 		];
 
-		if ($httpMethod === HttpMethod::GET) {
+		if ($httpMethod === HttpMethod::GET || $httpMethod === HttpMethod::DELETE) {
 			$token = $this->createJWT([]);
 			$headers[] = "Authorization: Bearer $token";
 		}
