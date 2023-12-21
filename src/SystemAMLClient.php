@@ -2,7 +2,6 @@
 
 namespace FiberPay\SystemAML;
 
-use FiberPay\SystemAML\RequestParams\Party\PartyParams;
 use FiberPay\SystemAML\RequestParams\Constants\HttpMethod;
 use FiberPay\SystemAML\RequestParams\Party\PartyType;
 use Firebase\JWT\JWT;
@@ -12,7 +11,8 @@ class SystemAMLClient
 {
 	private const PARTIES_URI = '/parties';
 	private const TRANSACTIONS_URI = '/transactions';
-	private readonly string $apiVersion;
+    private const APPLICANTS_URI = '/applicants';
+    private readonly string $apiVersion;
 
 	public function __construct(
 		private readonly string $baseApiURL,
@@ -297,6 +297,43 @@ class SystemAMLClient
 		$uri = "/rules/risk-recalculate?type=$modelType&code=$modelCode";
 		return $this->call(HttpMethod::GET, $uri);
 	}
+
+    /**
+     * @throws SystemAMLException
+     */
+    public function createApplicant(
+        ?string $description = null,
+        ?string $redirectUrl = null,
+        ?string $applicantEmail = null,
+        ?string $references = null
+    )
+    {
+        $data = [];
+        if ($description !== null) $data['description'] = $description;
+        if ($redirectUrl !== null) $data['redirectUrl'] = $redirectUrl;
+        if ($applicantEmail !== null) $data['applicantEmail'] = $applicantEmail;
+        if ($references !== null) $data['references'] = $references;
+        $uri = self::APPLICANTS_URI;
+        return $this->call(HttpMethod::POST, $uri, $data);
+    }
+
+    /**
+     * @throws SystemAMLException
+     */
+    public function getApplicant(string $code)
+    {
+        $uri = self::APPLICANTS_URI . '/' . $code;
+        return $this->call(HttpMethod::GET, $uri);
+    }
+
+    /**
+     * @throws SystemAMLException
+     */
+    public function getApplicantInPendingStatusesByPartyCode(string $partyCode)
+    {
+        $uri = self::APPLICANTS_URI . "?partyCode=$partyCode&pendingOnly=true";
+        return $this->call(HttpMethod::GET, $uri);
+    }
 
 	/**
 	 * @throws SystemAMLException
